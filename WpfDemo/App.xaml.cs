@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
+using WpfDemo.Views;
 
 namespace WpfDemo
 {
@@ -11,7 +12,7 @@ namespace WpfDemo
     {
         protected override Window CreateShell()
         {
-            return Container.Resolve<MainWindow>();
+            return Container.Resolve<MainView>();
         }
 
         /// <summary>
@@ -22,7 +23,7 @@ namespace WpfDemo
         /// <param name="containerRegistry">用于注册类型的容器注册表。</param>
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            
         }
     }
 

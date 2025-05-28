@@ -7,11 +7,71 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <materialDesign:BundledTheme BaseTheme="Light"
+                <materialDesign:BundledTheme BaseTheme="Dark"
                                              PrimaryColor="DeepPurple"
                                              SecondaryColor="Lime" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
+
+
+                <!-- You can also use the built-in theme dictionaries: -->
+                <!--
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Secondary/MaterialDesignColor.Lime.xaml" />
+        -->
+
+                <!-- NB: If you're migrating and not wanting to update your brushes, you will want this resource dictionary for the old brush names: -->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ObsoleteBrushes.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
+            
+
+            <Style x:Key="MyListBoxItemStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="MinHeight"
+                        Value="40" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <Grid>
+                                <Border x:Name="borderHeader" />
+                                <Border x:Name="border" />
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Grid>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected"
+                                         Value="True">
+                                    <Setter TargetName="borderHeader"
+                                            Property="BorderThickness"
+                                            Value="4,0,0,0" />
+                                    <Setter TargetName="borderHeader"
+                                            Property="BorderBrush"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Opacity"
+                                            Value="0.2" />
+                                </Trigger>
+
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Opacity"
+                                            Value="0.2" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
