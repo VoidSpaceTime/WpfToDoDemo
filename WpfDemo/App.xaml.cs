@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
+using WpfDemo.ViewModels;
 using WpfDemo.Views;
 
 namespace WpfDemo
@@ -23,7 +24,11 @@ namespace WpfDemo
         /// <param name="containerRegistry">用于注册类型的容器注册表。</param>
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            // 注册导航
+            containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>();
+            containerRegistry.RegisterForNavigation<ToDoView, ToDoViewModel>();
+            containerRegistry.RegisterForNavigation<MemoView, MemoViewModel>();
+            containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>();
         }
     }
 
