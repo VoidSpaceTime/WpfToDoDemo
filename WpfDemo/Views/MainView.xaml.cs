@@ -22,6 +22,10 @@ namespace WpfDemo.Views
         public MainView()
         {
             InitializeComponent();
+            menuBar.SelectionChanged += (s, e) =>
+            {
+                drawerHost.IsLeftDrawerOpen = false; // 选择菜单后关闭抽屉
+            };
         }
     }
 }
