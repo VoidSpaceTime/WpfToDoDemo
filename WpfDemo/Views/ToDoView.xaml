@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WpfDemo.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+    <Grid Background="White">
+        <TextBlock Text="ToDo" FontSize="50"/>
     </Grid>
 </UserControl>
