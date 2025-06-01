@@ -22,6 +22,8 @@ namespace WpfDemo.ViewModels
             get { return taskBars; }
             set { taskBars = value; RaisePropertyChanged(); }
         }
+        public ObservableCollection<ToDoDto> ToDoDtos { get; set; }
+        public ObservableCollection<MemoDto> MemoDtos { get; set; }
         void CreateTaskBars()
         {
             TaskBars.Add(new TaskBar()
