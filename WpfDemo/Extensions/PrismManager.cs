@@ -9,6 +9,9 @@ namespace WpfDemo.Extensions
     public static class PrismManager
     {
         // Define the MainViewRegionName constant to fix the error  
+        // 首页区域
         public const string MainViewRegionName = "MainViewRegion";
+        //设置页区域
+        public const string SettingsViewRegionName = "SettingsViewRegion";
     }
 }

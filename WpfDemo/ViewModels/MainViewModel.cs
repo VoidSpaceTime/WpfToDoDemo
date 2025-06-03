@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using WpfDemo.Commen.Modles;
+using WpfDemo.Common.Modles;
 using WpfDemo.Extensions;
 
 namespace WpfDemo.ViewModels
@@ -88,7 +88,7 @@ namespace WpfDemo.ViewModels
             {
                 Icon = "Cog",
                 Title = "设置",
-                NameSpace = "SettingView"
+                NameSpace = "SettingsView"
             });
         }
     }

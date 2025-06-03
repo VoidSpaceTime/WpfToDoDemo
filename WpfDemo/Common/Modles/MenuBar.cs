@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfDemo.Commen.Modles
+namespace WpfDemo.Common.Modles
 {
     /// <summary>
     /// 系统菜单栏模型
