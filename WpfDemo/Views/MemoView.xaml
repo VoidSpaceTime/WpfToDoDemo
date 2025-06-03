@@ -5,8 +5,123 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfDemo.Views"
              mc:Ignorable="d" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Memo" FontSize="50"/>
-    </Grid>
+    <md:DialogHost>
+        <md:DrawerHost IsRightDrawerOpen="{Binding IsRightDrawerOpen}">
+            <md:DrawerHost.RightDrawerContent>
+                <DockPanel Width="300"
+                           Margin="10"
+                           LastChildFill="False">
+                    <TextBlock  Text="添加备忘录"
+                                Padding="10"
+                                FontSize="20"
+                                FontWeight="Bold"
+                                DockPanel.Dock="Top" />
+                    <StackPanel Orientation="Horizontal"
+                                DockPanel.Dock="Top">
+                    </StackPanel>
+                    <TextBox md:HintAssist.Hint="请输入备忘概要"
+                             Margin="10"
+                             DockPanel.Dock="Top" />
+                    <TextBox MinHeight="100"
+                             Margin="10"
+                             md:HintAssist.Hint="请输入备忘内容"
+                             md:HintAssist.ApplyHintPaddingBrush="False"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             TextBlock.TextAlignment="Left"
+                             DockPanel.Dock="Top" />
+                    <Button Content="添加到备忘录"
+                            Margin="8"
+                            DockPanel.Dock="Top"></Button>
+                </DockPanel>
+
+            </md:DrawerHost.RightDrawerContent>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Margin="15,0,0,0"
+                            Orientation="Horizontal">
+                    <TextBox Width="250"
+                             VerticalAlignment="Center"
+                             md:TextFieldAssist.HasClearButton="True"
+                             md:HintAssist.Hint="查找备忘录...">
+
+                    </TextBox>
+                </StackPanel>
+                <Button HorizontalAlignment="Right"
+                        Content="添加备忘录"
+                        Command="{Binding AddCommand}"
+                        Margin="10,5">
+
+                </Button>
+                <ScrollViewer Grid.Row="1" >
+                    <ItemsControl                         
+                        ItemsSource="{Binding MemoDtos}"
+                        HorizontalAlignment="Center">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!--动画-->
+                                <md:TransitioningContent OpeningEffect="{md:TransitionEffect Kind=ExpandIn}">
+                                    <Grid Width="220"
+                                  MinHeight="180"
+                                  MaxHeight="250"
+                                  Margin="8">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Border CornerRadius="3"
+                                        Background="Green"
+                                        Grid.RowSpan="2" />
+
+                                        <TextBlock Padding="10,5"
+                                           Text="{Binding Title}"
+                                           FontWeight="Bold"></TextBlock>
+                                        <TextBlock Padding="10,5"
+                                           Text="{Binding Content}"
+                                           Grid.Row="1"></TextBlock>
+                                        <Canvas Grid.RowSpan="2"
+                                        ClipToBounds="True">
+                                            <Border Canvas.Top="10"
+                                            Canvas.Right="-50"
+                                            Height="120"
+                                            Width="120"
+                                            Background="White"
+                                            CornerRadius="100"
+                                            Opacity="0.1" />
+
+                                            <Border Canvas.Top="80"
+                                            Canvas.Right="-30"
+                                            Height="120"
+                                            Width="120"
+                                            Background="White"
+                                            CornerRadius="100"
+                                            Opacity="0.1" />
+                                        </Canvas>
+                                        <md:PopupBox HorizontalAlignment="Right">
+                                            <Button Content="删除">
+
+                                            </Button>
+                                        </md:PopupBox>
+                                    </Grid>
+                                </md:TransitioningContent>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </md:DrawerHost>
+    </md:DialogHost>
 </UserControl>

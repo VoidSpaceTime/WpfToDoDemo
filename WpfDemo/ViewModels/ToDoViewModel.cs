@@ -10,16 +10,13 @@ namespace WpfDemo.ViewModels
 {
     public class ToDoViewModel : BindableBase
     {
-        private ObservableCollection<ToDoDto> toDoDtos;
+        private ObservableCollection<MemoDto> toDoDtos;
         private DelegateCommand addCommand;
         private bool isRightDrawerOpen;
 
-
-
-
         public ToDoViewModel()
         {
-            ToDoDtos = new ObservableCollection<ToDoDto> { };
+            ToDoDtos = new ObservableCollection<MemoDto> { };
             CreateToDoList();
             AddCommand = new DelegateCommand(AddCommandExecute);
         }
@@ -33,7 +30,7 @@ namespace WpfDemo.ViewModels
                 RaisePropertyChanged();
             }
         }
-        public ObservableCollection<ToDoDto> ToDoDtos
+        public ObservableCollection<MemoDto> ToDoDtos
         {
             get { return toDoDtos; }
             set { toDoDtos = value; RaisePropertyChanged(); }
@@ -58,7 +55,7 @@ namespace WpfDemo.ViewModels
         {
             for (int i = 0; i < 20; i++)
             {
-                ToDoDtos.Add(new ToDoDto
+                ToDoDtos.Add(new MemoDto
                 {
                     Title = $"待办事项{i + 1}",
                     Content = $"待办事项{i + 1}的内容",

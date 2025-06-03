@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WpfDemo.Views"
+             xmlns:viewmodels="clr-namespace:WpfDemo.ViewModels"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:viewmodels="clr-namespace:WpfDemo.ViewModels"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -50,7 +50,6 @@
                 </DockPanel>
 
             </md:DrawerHost.RightDrawerContent>
-
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -80,37 +79,40 @@
                         Margin="10,5">
 
                 </Button>
-                <ItemsControl Grid.Row="1"
+                <ScrollViewer  Grid.Row="1">
+                    <ItemsControl
                               ItemsSource="{Binding ToDoDtos}"
                               HorizontalAlignment="Center">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Width="220"
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!--动画-->
+                                <md:TransitioningContent OpeningEffect="{md:TransitionEffect Kind=ExpandIn}">
+                                    <Grid Width="220"
                                   MinHeight="180"
                                   MaxHeight="250"
                                   Margin="8">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                </Grid.RowDefinitions>
-                                <Border CornerRadius="3"
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Border CornerRadius="3"
                                         Background="Green"
                                         Grid.RowSpan="2" />
 
-                                <TextBlock Padding="10,5"
+                                        <TextBlock Padding="10,5"
                                            Text="{Binding Title}"
                                            FontWeight="Bold"></TextBlock>
-                                <TextBlock Padding="10,5"
+                                        <TextBlock Padding="10,5"
                                            Text="{Binding Content}"
                                            Grid.Row="1"></TextBlock>
-                                <Canvas Grid.RowSpan="2"
+                                        <Canvas Grid.RowSpan="2"
                                         ClipToBounds="True">
-                                    <Border Canvas.Top="10"
+                                            <Border Canvas.Top="10"
                                             Canvas.Right="-50"
                                             Height="120"
                                             Width="120"
@@ -118,24 +120,25 @@
                                             CornerRadius="100"
                                             Opacity="0.1" />
 
-                                    <Border Canvas.Top="80"
+                                            <Border Canvas.Top="80"
                                             Canvas.Right="-30"
                                             Height="120"
                                             Width="120"
                                             Background="White"
                                             CornerRadius="100"
                                             Opacity="0.1" />
-                                </Canvas>
-                                <md:PopupBox HorizontalAlignment="Right">
-                                    <Button Content="删除">
+                                        </Canvas>
+                                        <md:PopupBox HorizontalAlignment="Right">
+                                            <Button Content="删除">
 
-                                    </Button>
-                                </md:PopupBox>
-                            </Grid>
-
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                                            </Button>
+                                        </md:PopupBox>
+                                    </Grid>
+                                </md:TransitioningContent>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </Grid>
         </md:DrawerHost>
     </md:DialogHost>
