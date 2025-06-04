@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 using WpfDemo.ViewModels;
 using WpfDemo.Views;
 
@@ -11,11 +9,11 @@ namespace WpfDemo
     /// </summary>
     public partial class App : PrismApplication
     {
+
         protected override Window CreateShell()
         {
             return Container.Resolve<MainView>();
         }
-
         /// <summary>
         /// 注册依赖注入容器中的类型和服务。
         /// 在此方法中可以将应用程序所需的服务、视图、视图模型等类型注册到容器中，
@@ -32,6 +30,7 @@ namespace WpfDemo
             containerRegistry.RegisterForNavigation<MemoView, MemoViewModel>();
             containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>();
         }
+
     }
 
 }
