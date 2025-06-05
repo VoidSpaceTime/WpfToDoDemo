@@ -8,9 +8,9 @@ namespace MyToDo.Api.Context
     public class MyToDoContext : DbContext
     {
 
-        DbSet<User> User { get; set; }
-        DbSet<ToDo> ToDo { get; set; }
-        DbSet<Memo> Memo { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<ToDo> ToDo { get; set; }
+        public DbSet<Memo> Memo { get; set; }
 
         public MyToDoContext(DbContextOptions<MyToDoContext> options) : base(options)
         {

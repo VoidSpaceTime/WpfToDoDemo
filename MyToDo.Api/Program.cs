@@ -1,5 +1,8 @@
+using Ardalis.Specification;
+using Ardalis.Specification.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MyToDo.Api.Context;
+using MyToDo.Api.Context.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,13 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("ToDoConnection");
 builder.Services.AddDbContext<MyToDoContext>(options =>
     options.UseSqlite(connectionString));
+//builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+//builder.Services.AddScoped<IRepositoryBase<User>, UserRepository>();
+//builder.Services.AddScoped<IRepositoryBase<ToDo>, ToDoRepository>();
+//builder.Services.AddScoped<IRepositoryBase<Memo>, MemoRepository>();
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<ToDoRepository>();
+builder.Services.AddScoped<MemoRepository>();
 
 
 var app = builder.Build();
