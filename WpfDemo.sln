@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDemo", "WpfDemo\WpfDemo.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyToDo.Api", "MyToDo.Api\MyToDo.Api.csproj", "{AF7E713C-1698-459C-9C11-276CF78D1706}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyToDo.Shared", "MyToDo.Shared\MyToDo.Shared.csproj", "{03B230CD-A2A7-4723-9282-C5255C2B3EFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AF7E713C-1698-459C-9C11-276CF78D1706}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF7E713C-1698-459C-9C11-276CF78D1706}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF7E713C-1698-459C-9C11-276CF78D1706}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03B230CD-A2A7-4723-9282-C5255C2B3EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03B230CD-A2A7-4723-9282-C5255C2B3EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03B230CD-A2A7-4723-9282-C5255C2B3EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03B230CD-A2A7-4723-9282-C5255C2B3EFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

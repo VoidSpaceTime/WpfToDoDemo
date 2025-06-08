@@ -3,6 +3,7 @@ using Ardalis.Specification.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MyToDo.Api.Context;
 using MyToDo.Api.Context.Repository;
+using MyToDo.Api.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddDbContext<MyToDoContext>(options =>
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<ToDoRepository>();
 builder.Services.AddScoped<MemoRepository>();
+builder.Services.AddScoped<IToDoService, ToDoService>();
 
 
 var app = builder.Build();
