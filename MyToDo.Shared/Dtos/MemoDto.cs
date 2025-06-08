@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace MyToDo.Shared.Dtos
 {
-    public class ToDoDto : BaseDto
+    public class MemoDto : BaseDto
     {
         private string title;
         private string content;
-        private int status;
 
         public string Title
         {
@@ -27,15 +26,6 @@ namespace MyToDo.Shared.Dtos
             set
             {
                 content = value;
-                OnPropertyChanged();
-            }
-        }
-        public int Status
-        {
-            get { return status; }
-            set
-            {
-                status = value;
                 OnPropertyChanged();
             }
         }

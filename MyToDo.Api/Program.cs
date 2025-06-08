@@ -1,8 +1,8 @@
-using Ardalis.Specification;
-using Ardalis.Specification.EntityFrameworkCore;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MyToDo.Api.Context;
 using MyToDo.Api.Context.Repository;
+using MyToDo.Api.Extensions;
 using MyToDo.Api.Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,8 +24,13 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<ToDoRepository>();
 builder.Services.AddScoped<MemoRepository>();
 builder.Services.AddScoped<IToDoService, ToDoService>();
+builder.Services.AddScoped<IMemoService, MemoService>();
 
-
+var automapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new AutoMapperProFile());
+});
+builder.Services.AddSingleton(automapperConfig.CreateMapper());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
