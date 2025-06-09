@@ -51,7 +51,7 @@ namespace MyToDo.Api.Service
         public async Task<ApiResponse> GetAllAsync(QueryParameter queryParameter)
         {
             var query = _dbContext.Memo.AsQueryable();
-            var memos = _dbContext.Memo.ToListAsync();
+            //var memos = _dbContext.Memo.ToListAsync();
 
             // 搜索条件
             if (!string.IsNullOrWhiteSpace(queryParameter.Search))

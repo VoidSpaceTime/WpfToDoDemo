@@ -25,6 +25,7 @@ builder.Services.AddScoped<ToDoRepository>();
 builder.Services.AddScoped<MemoRepository>();
 builder.Services.AddScoped<IToDoService, ToDoService>();
 builder.Services.AddScoped<IMemoService, MemoService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 var automapperConfig = new MapperConfiguration(cfg =>
 {
