@@ -1,24 +1,27 @@
-﻿using System;
+﻿using MyToDo.Shared.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WpfDemo.Common.Modles;
+using WpfDemo.Sercive;
 
 namespace WpfDemo.ViewModels
 {
     public class ToDoViewModel : BindableBase
     {
-        private ObservableCollection<MemoDto> toDoDtos;
+        private ObservableCollection<ToDoDto> toDoDtos;
         private DelegateCommand addCommand;
         private bool isRightDrawerOpen;
-
-        public ToDoViewModel()
+        private readonly IToDoService toDoService;
+        public ToDoViewModel(IToDoService toDoService)
         {
-            ToDoDtos = new ObservableCollection<MemoDto> { };
-            CreateToDoList();
+            ToDoDtos = new ObservableCollection<ToDoDto> { };
             AddCommand = new DelegateCommand(AddCommandExecute);
+            this.toDoService = toDoService;
+            CreateToDoList();
         }
 
         public bool IsRightDrawerOpen
@@ -30,7 +33,7 @@ namespace WpfDemo.ViewModels
                 RaisePropertyChanged();
             }
         }
-        public ObservableCollection<MemoDto> ToDoDtos
+        public ObservableCollection<ToDoDto> ToDoDtos
         {
             get { return toDoDtos; }
             set { toDoDtos = value; RaisePropertyChanged(); }
@@ -44,22 +47,24 @@ namespace WpfDemo.ViewModels
                 RaisePropertyChanged();
             }
         }
-         
+
         private void AddCommandExecute()
         {
             IsRightDrawerOpen = true;
 
         }
 
-        private void CreateToDoList()
+        private async Task CreateToDoList()
         {
-            for (int i = 0; i < 20; i++)
+            ToDoDtos.Clear();
+            var todoResult = await toDoService.GetAllAsync(new MyToDo.Shared.Parameters.QueryParameter() { PageIndex = 0, PageSize = 100});
+            if (todoResult.Status)
             {
-                ToDoDtos.Add(new MemoDto
+                foreach (var item in todoResult.Data.Items)
                 {
-                    Title = $"待办事项{i + 1}",
-                    Content = $"待办事项{i + 1}的内容",
-                });
+                    ToDoDtos.Add(item);
+
+                }
             }
         }
     }

@@ -1,12 +1,6 @@
-﻿using MyToDo.Api.Service;
+﻿using MyToDo.Shared;
 using Newtonsoft.Json;
 using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace WpfDemo.Sercive
 {
@@ -38,7 +32,7 @@ namespace WpfDemo.Sercive
             //request.Resource = (baseUrl + baseRequest.Route);
             //var response = await restClient.ExecuteAsync<ApiResponse>(request);
             var response = await restClient.ExecuteAsync(request);
-            return JsonConvert.DeserializeObject<ApiResponse>(response.Content) ?? new ApiResponse("Error in response");
+            return JsonConvert.DeserializeObject<ApiResponse>(response.Content);
         }
         public async Task<ApiResponse<T>> ExcuteAsync<T>(BaseRequest baseRequest)
         {
@@ -58,7 +52,8 @@ namespace WpfDemo.Sercive
             //request.Resource = (baseUrl + baseRequest.Route);
             //var response = await restClient.ExecuteAsync<ApiResponse>(request);
             var response = await restClient.ExecuteAsync(request);
-            return JsonConvert.DeserializeObject<ApiResponse<T>>(response.Content);
+            var res = JsonConvert.DeserializeObject<ApiResponse<T>>(response.Content);
+            return res;
         }
     }
 }

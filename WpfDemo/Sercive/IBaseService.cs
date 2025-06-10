@@ -1,10 +1,4 @@
-﻿using MyToDo.Api.Service;
-using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyToDo.Shared;
 
 namespace WpfDemo.Sercive
 {
@@ -12,9 +6,9 @@ namespace WpfDemo.Sercive
     {
         Task<ApiResponse<T>> AddAshync(T model);
         Task<ApiResponse<T>> UpdateAsync(T model);
-        Task<ApiResponse<T>> DeleAsync(int id);
+        Task<ApiResponse> DeleteAsync(int id);
         Task<ApiResponse<T>> GetFirstOrDefaultAsync(int id);
-        Task<ApiResponse<PagedList<T>>> GetAllAsync(QueryParameter queryParameter);
+        Task<ApiResponse<PagedList<T>>> GetAllAsync(MyToDo.Shared.Parameters.QueryParameter queryParameter);
 
     }
 }
