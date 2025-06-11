@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MyToDo.Shared.Dtos;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WpfDemo.Common.Modles;
+using WpfDemo.Sercive;
 
 namespace WpfDemo.ViewModels
 {
     public class MemoViewModel : BindableBase
     {
-        public MemoViewModel()
-        {
-            MemoDtos = new ObservableCollection<MemoDto> { };
-            CreateMemoList();
-            AddCommand = new DelegateCommand(AddCommandExecute);
-        }
         private ObservableCollection<MemoDto> memoDtos;
         private DelegateCommand addCommand;
         private bool isRightDrawerOpen;
+        private readonly IMemoService memoService;
+        public MemoViewModel(IMemoService memoService)
+        {
+            MemoDtos = new ObservableCollection<MemoDto> { };
+            AddCommand = new DelegateCommand(AddCommandExecute);
+            this.memoService = memoService;
+            CreateMemoList();
+        }
+
 
 
         public bool IsRightDrawerOpen
@@ -51,16 +50,26 @@ namespace WpfDemo.ViewModels
 
         }
 
-        private void CreateMemoList()
+        private async void CreateMemoList()
         {
-            for (int i = 0; i < 20; i++)
+            MemoDtos.Clear();
+            var memoResult = await memoService.GetAllAsync(new MyToDo.Shared.Parameters.QueryParameter() { PageIndex = 0, PageSize = 100 });
+            if (memoResult.Status)
             {
-                MemoDtos.Add(new MemoDto
+                foreach (var item in memoResult.Data.Items)
                 {
-                    Title = $"备忘录事项{i + 1}",
-                    Content = $"备忘录事项{i + 1}的内容",
-                });
+                    MemoDtos.Add(item);
+
+                }
             }
+            /*         for (int i = 0; i < 20; i++)
+                     {
+                         MemoDtos.Add(new MemoDto
+                         {
+                             Title = $"备忘录事项{i + 1}",
+                             Content = $"备忘录事项{i + 1}的内容",
+                         });
+                     }*/
         }
     }
 }

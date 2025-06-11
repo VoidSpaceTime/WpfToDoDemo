@@ -9,11 +9,11 @@ namespace MyToDo.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class MemoConctroller : ControllerBase
+    public class MemoController : ControllerBase
     {
         private readonly IMemoService memoService;
         private readonly IMapper mapper;
-        public MemoConctroller(IMemoService memoService, IMapper mapper)
+        public MemoController(IMemoService memoService, IMapper mapper)
         {
             this.memoService = memoService;
             this.mapper = mapper;
