@@ -14,7 +14,7 @@ namespace WpfDemo.Extensions
         /// </summary>
         /// <param name="eventAggregator"></param>
         /// <param name="updateModel"></param>
-        public static void UpdateLoading(this EventAggregator eventAggregator, UpdateModel updateModel)
+        public static void UpdateLoading(this IEventAggregator eventAggregator, UpdateModel updateModel)
         {
             eventAggregator.GetEvent<UpdateLoadingEvent>().Publish(updateModel);
         }
@@ -23,7 +23,7 @@ namespace WpfDemo.Extensions
         /// </summary>
         /// <param name="eventAggregator"></param>
         /// <param name="updateModel"></param>
-        public static void Register(this EventAggregator eventAggregator, Action<UpdateModel> updateModel)
+        public static void Register(this IEventAggregator eventAggregator, Action<UpdateModel> updateModel)
         {
             eventAggregator.GetEvent<UpdateLoadingEvent>().Subscribe(updateModel);
         }

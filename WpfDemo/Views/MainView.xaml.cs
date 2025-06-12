@@ -1,32 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using Prism.Events;
+using WpfDemo.Extensions; // Ensure Prism.Events namespace is included  
 
 namespace WpfDemo.Views
 {
-    /// <summary>
-    /// MainView.xaml 的交互逻辑
-    /// </summary>
+    /// <summary>  
+    /// MainView.xaml 的交互逻辑  
+    /// </summary>  
     public partial class MainView : Window
     {
         public MainView(IEventAggregator eventAggregator)
         {
             InitializeComponent();
-            eventAggregator.Register();
+
+            // 使用扩展方法注册等待消息窗口
+            eventAggregator.Register(arg =>
+            {
+                DialogHost.IsOpen = arg.IsOpen;
+
+                if (DialogHost.IsOpen)
+                    DialogHost.DialogContent = new ProgressView();
+            });
+
             menuBar.SelectionChanged += (s, e) =>
             {
-                drawerHost.IsLeftDrawerOpen = false; // 选择菜单后关闭抽屉
+                drawerHost.IsLeftDrawerOpen = false; // 选择菜单后关闭抽屉  
             };
         }
     }
+
 }

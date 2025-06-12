@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WpfDemo.Common.Events;
+using WpfDemo.Extensions;
 
 namespace WpfDemo.ViewModels
 {
     /// <summary>
     /// 页面显示加载中 导航
     /// </summary>
-    public class NavigationViewModel : INavigationAware
+    public class NavigationViewModel : BindableBase, INavigationAware
     {
         private readonly IContainerProvider containerProvider;
         private readonly IEventAggregator eventAggregator;
@@ -21,17 +23,22 @@ namespace WpfDemo.ViewModels
         }
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return true; 
+            return true;
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public virtual void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public virtual void OnNavigatedTo(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+        }
+        public void UpdateLoading(bool isOpen)
+        {
+            eventAggregator.UpdateLoading(new UpdateModel()
+            {
+                IsOpen = isOpen
+            });
         }
     }
 }

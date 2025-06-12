@@ -42,7 +42,7 @@ namespace WpfDemo
                 向容器中注册一个名为 "webUrl" 的字符串实例，其值为 "http://localhost:3389/"。
                 这为上面注册的 HttpRestClient 提供了依赖的实际值。
              */
-            containerRegistry.GetContainer().RegisterInstance(@"http://localhost:5136/", serviceKey: "webUrl");
+            containerRegistry.GetContainer().RegisterInstance(@"http://localhost:17381/", serviceKey: "webUrl");
             containerRegistry.GetContainer()
              .Register<HttpRestClient>(made: Parameters.Of.Type<string>(serviceKey: "webUrl"));
 
