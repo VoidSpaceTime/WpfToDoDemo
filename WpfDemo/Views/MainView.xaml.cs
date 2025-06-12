@@ -19,9 +19,10 @@ namespace WpfDemo.Views
     /// </summary>
     public partial class MainView : Window
     {
-        public MainView()
+        public MainView(IEventAggregator eventAggregator)
         {
             InitializeComponent();
+            eventAggregator.Register();
             menuBar.SelectionChanged += (s, e) =>
             {
                 drawerHost.IsLeftDrawerOpen = false; // 选择菜单后关闭抽屉
