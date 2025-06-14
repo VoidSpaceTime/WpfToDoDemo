@@ -15,7 +15,7 @@ namespace WpfDemo.Sercive
             this.restClient = restClient;
             this.serviceNmae = serviceNmae;
         }
-        public async Task<ApiResponse<T>> AddAshync(T model)
+        public async Task<ApiResponse<T>> AddAsync(T model)
         {
             var requset = new BaseRequest
             {

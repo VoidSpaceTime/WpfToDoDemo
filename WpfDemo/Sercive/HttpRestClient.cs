@@ -38,17 +38,17 @@ namespace WpfDemo.Sercive
         {
             var request = new RestRequest(baseUrl + baseRequest.Route, baseRequest.Metod);
             request.AddHeader("Content-Type", baseRequest.ContentType);
-            if (baseRequest.Parameters != null)
+
+            if (baseRequest.Metod == Method.Get)
             {
-                //if (baseRequest.Metod == Method.Get)
-                //{
                 request.AddParameter("param", JsonConvert.SerializeObject(baseRequest.Parameters));
-                //}
-                //else
-                //{
-                //    request.AddJsonBody(baseRequest.Parameters);
-                //}
             }
+            else
+            {
+                request.AddJsonBody(baseRequest.Parameters);
+            }
+
+
             //request.Resource = (baseUrl + baseRequest.Route);
             //var response = await restClient.ExecuteAsync<ApiResponse>(request);
             var response = await restClient.ExecuteAsync(request);

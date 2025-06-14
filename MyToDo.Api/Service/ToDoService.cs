@@ -8,22 +8,22 @@ namespace MyToDo.Api.Service
 {
     public class ToDoService : IToDoService
     {
-        private readonly MyToDoContext _dbContext;
+        private readonly MyToDoContext dbContext;
         private readonly IMapper mapper;
         public ToDoService(MyToDoContext dbContext, IMapper mapper)
         {
-            _dbContext = dbContext;
+            this.dbContext = dbContext;
             this.mapper = mapper;
         }
 
         public async Task<ApiResponse> AddAsync(ToDo model)
         {
-            _dbContext.ToDo.Add(model);
-            return await _dbContext.SaveChangesAsync().ContinueWith(task =>
+            await dbContext.ToDo.AddAsync(model);
+            return await dbContext.SaveChangesAsync().ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully)
                 {
-                    return new ApiResponse(true, model);
+                    return new ApiResponse(true, mapper.Map<ToDoDto>(model));
                 }
                 else
                 {
@@ -34,9 +34,9 @@ namespace MyToDo.Api.Service
 
         public async Task<ApiResponse> DeleteAsync(int id)
         {
-            var ob = await _dbContext.ToDo.FirstOrDefaultAsync(x => x.Id == id);
-            _dbContext.ToDo.Remove(ob);
-            return await _dbContext.SaveChangesAsync().ContinueWith(task =>
+            var ob = await dbContext.ToDo.FirstOrDefaultAsync(x => x.Id == id);
+            dbContext.ToDo.Remove(ob);
+            return await dbContext.SaveChangesAsync().ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully)
                 {
@@ -51,7 +51,7 @@ namespace MyToDo.Api.Service
 
         public async Task<ApiResponse> GetAllAsync(QueryParameter queryParameter)
         {
-            var query = _dbContext.ToDo.AsQueryable();
+            var query = dbContext.ToDo.AsQueryable();
 
             // 搜索条件
             if (!string.IsNullOrWhiteSpace(queryParameter.Search))
@@ -68,11 +68,11 @@ namespace MyToDo.Api.Service
                 .Skip((queryParameter.PageIndex - 1) * queryParameter.PageSize)
                 .Take(queryParameter.PageSize)
                 .ToListAsync();
-
+            var dtos = items.Select(e => mapper.Map<ToDoDto>(e)).ToList();
             var result = new
             {
                 TotalCount = totalCount,
-                Items = items
+                Items = dtos
             };
 
 
@@ -82,11 +82,11 @@ namespace MyToDo.Api.Service
 
         public async Task<ApiResponse> GetByIdAsync(int id)
         {
-            return await _dbContext.ToDo.FirstOrDefaultAsync(x => x.Id == id).ContinueWith(task =>
+            return await dbContext.ToDo.FirstOrDefaultAsync(x => x.Id == id).ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully && task.Result != null)
                 {
-                    return new ApiResponse(true, task.Result);
+                    return new ApiResponse(true, mapper.Map<ToDoDto>(task.Result));
                 }
                 else
                 {
@@ -97,24 +97,18 @@ namespace MyToDo.Api.Service
 
         public async Task<ApiResponse> UpdateAsync(ToDo model)
         {
-            return await _dbContext.ToDo
-                 .Where(x => x.Id == model.Id)
-                 .ExecuteUpdateAsync(setters => setters
-                     .SetProperty(x => x.Title, model.Title)
-                     .SetProperty(x => x.Content, model.Content)
-                     .SetProperty(x => x.Status, model.Status)
-                     .SetProperty(x => x.UpdateDate, DateTime.Now))
-                 .ContinueWith(task =>
-                 {
-                     if (task.IsCompletedSuccessfully)
-                     {
-                         return new ApiResponse(true, "Update completed");
-                     }
-                     else
-                     {
-                         return new ApiResponse("Failed to update ToDo item.");
-                     }
-                 });
+            dbContext.ToDo.Update(model);
+            return await dbContext.SaveChangesAsync().ContinueWith(task =>
+            {
+                if (task.IsCompletedSuccessfully)
+                {
+                    return new ApiResponse(true, mapper.Map<ToDoDto>(model));
+                }
+                else
+                {
+                    return new ApiResponse("Failed to update ToDo item.");
+                }
+            });
         }
     }
 }
