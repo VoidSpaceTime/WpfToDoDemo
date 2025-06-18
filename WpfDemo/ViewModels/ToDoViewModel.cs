@@ -1,4 +1,5 @@
 ﻿using MyToDo.Shared.Dtos;
+using MyToDo.Shared.Parameters;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using WpfDemo.Sercive;
@@ -15,6 +16,7 @@ namespace WpfDemo.ViewModels
             ToDoDtos = new ObservableCollection<ToDoDto> { };
             ExecuteCommand = new DelegateCommand<string>(Execute);
             SelectedCommand = new DelegateCommand<ToDoDto>(Selected);
+            DeletedCommand = new DelegateCommand<ToDoDto>(Deleted);
             this.toDoService = toDoService;
         }
 
@@ -45,13 +47,21 @@ namespace WpfDemo.ViewModels
             }
         }
         private string search;
-
         public string Search
         {
             get { return search; }
             set { search = value; RaisePropertyChanged(); }
         }
+        private int selectIndex;
+
+        public int SelectIndex
+        {
+            get { return selectIndex; }
+            set { selectIndex = value; RaisePropertyChanged(); }
+        }
+
         public DelegateCommand<ToDoDto> SelectedCommand { get; private set; }
+        public DelegateCommand<ToDoDto> DeletedCommand { get; private set; }
         private ToDoDto currentDto;
 
         public ToDoDto CurrentDto
@@ -59,7 +69,6 @@ namespace WpfDemo.ViewModels
             get { return currentDto; }
             set { currentDto = value; RaisePropertyChanged(); }
         }
-
         private void AddCommandExecute()
         {
             CurrentDto = new ToDoDto();
@@ -73,7 +82,7 @@ namespace WpfDemo.ViewModels
         {
             UpdateLoading(true); // 显示加载中
             ToDoDtos.Clear();
-            var todoResult = await toDoService.GetAllAsync(new MyToDo.Shared.Parameters.QueryParameter() { PageIndex = 0, PageSize = 100, Search = Search });
+            var todoResult = await toDoService.GetAllFilterAsync(new ToDoParameter() { PageIndex = 0, PageSize = 100, Search = Search, Status = SelectIndex - 1 });
             if (todoResult.Status)
             {
                 foreach (var item in todoResult.Data.Items)
@@ -144,7 +153,10 @@ namespace WpfDemo.ViewModels
                      {
                          if (task.Result.Status)
                          {
-                             ToDoDtos.Add(task.Result.Data);
+                             System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                             {
+                                 ToDoDtos.Add(task.Result.Data);
+                             });
                          }
                      });
                 }
@@ -177,6 +189,25 @@ namespace WpfDemo.ViewModels
                 UpdateLoading(false);
             }
 
+        }
+        private void Deleted(ToDoDto dto)
+        {
+            if (dto == null || dto.Id == 0)
+            {
+                return;
+            }
+            UpdateLoading(true); // 显示加载中
+            toDoService.DeleteAsync(dto.Id).ContinueWith(task =>
+            {
+                if (task.Result.Status)
+                {
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        ToDoDtos.Remove(dto);
+                    });
+                }
+            });
+            UpdateLoading(false); // 隐藏加载中
         }
     }
 }

@@ -32,7 +32,7 @@ namespace WpfDemo.Sercive
             var requset = new BaseRequest
             {
                 Route = $"api/{serviceNmae}/Delete?id={id}",
-                Metod = Method.Post,
+                Metod = Method.Delete,
                 ContentType = "application/json",
             };
             return await restClient.ExcuteAsync(requset);

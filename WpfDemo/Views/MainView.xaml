@@ -15,7 +15,7 @@
         Width="960"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        Background="{DynamicResource MaterialDesignDaper}"
+        Background="{DynamicResource MaterialDesignDarkBackground}"
         FontFamily="微软雅黑"
         AllowsTransparency="True"
         TextElement.FontSize="13"
@@ -23,9 +23,11 @@
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto">
+
     <materialDesign:DialogHost DialogTheme="Inherit"
                                Identifier="RootDialog"
-                               x:Name="DialogHost">
+                               x:Name="DialogHost"
+                               Background="Black">
 
         <materialDesign:DrawerHost x:Name="drawerHost"
                                    IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
@@ -153,4 +155,5 @@
             </Grid>
         </materialDesign:DrawerHost>
     </materialDesign:DialogHost>
+
 </Window>

@@ -7,10 +7,10 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <materialDesign:BundledTheme BaseTheme="Dark"
+                <materialDesign:BundledTheme BaseTheme="Inherit"
                                              PrimaryColor="DeepPurple"
-                                             SecondaryColor="Lime" />
-
+                                             ColorAdjustment="{materialDesign:ColorAdjustment}"
+                                             SecondaryColor="LightBlue" />
 
                 <!-- You can also use the built-in theme dictionaries: -->
                 <!--
@@ -22,10 +22,9 @@
                 <!-- NB: If you're migrating and not wanting to update your brushes, you will want this resource dictionary for the old brush names: -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ObsoleteBrushes.xaml" />
 
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
-            
 
             <Style x:Key="MyListBoxItemStyle"
                    TargetType="ListBoxItem">
@@ -74,4 +73,5 @@
             </Style>
         </ResourceDictionary>
     </Application.Resources>
+
 </prism:PrismApplication>

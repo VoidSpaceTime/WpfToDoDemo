@@ -25,7 +25,7 @@ namespace MyToDo.Api.Controllers
         public async Task<ApiResponse> Get(int id) => await toDoService.GetByIdAsync(id);
 
         [HttpGet]
-        public async Task<ApiResponse> GetAll([FromQuery] QueryParameter queryParameter) => await toDoService.GetAllAsync(queryParameter);
+        public async Task<ApiResponse> GetAll([FromQuery] ToDoParameter parameter) => await toDoService.GetFliterAll(parameter);
 
         //[HttpGet]
         //public async Task<ApiResponse> Summary() => await toDoService.Summary();
@@ -37,7 +37,7 @@ namespace MyToDo.Api.Controllers
         public async Task<ApiResponse> Update([FromBody] ToDoDto model) => await toDoService.UpdateAsync(mapper.Map<ToDo>(model));
 
         [HttpDelete]
-        public async Task<ApiResponse> Delete(int id) => await toDoService.DeleteAsync(id);
+        public async Task<ApiResponse> Delete([FromQuery] int id) => await toDoService.DeleteAsync(id);
 
 
     }
