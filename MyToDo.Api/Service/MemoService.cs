@@ -1,24 +1,25 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MyToDo.Api.Context;
+using MyToDo.Shared.Dtos;
 using MyToDo.Shared.Parameters;
 
 namespace MyToDo.Api.Service
 {
     public class MemoService : IMemoService
     {
-        private readonly MyToDoContext _dbContext;
+        private readonly MyToDoContext dbContext;
         private readonly IMapper mapper;
         public MemoService(MyToDoContext dbContext, IMapper mapper)
         {
-            _dbContext = dbContext;
+            this.dbContext = dbContext;
             this.mapper = mapper;
         }
 
         public async Task<ApiResponse> AddAsync(Memo model)
         {
-            _dbContext.Memo.Add(model);
-            return await _dbContext.SaveChangesAsync().ContinueWith(task =>
+            dbContext.Memo.Add(model);
+            return await dbContext.SaveChangesAsync().ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully)
                 {
@@ -33,9 +34,9 @@ namespace MyToDo.Api.Service
 
         public async Task<ApiResponse> DeleteAsync(int id)
         {
-            var ob = await _dbContext.Memo.FirstOrDefaultAsync(x => x.Id == id);
-            _dbContext.Memo.Remove(ob);
-            return await _dbContext.SaveChangesAsync().ContinueWith(task =>
+            var ob = await dbContext.Memo.FirstOrDefaultAsync(x => x.Id == id);
+            dbContext.Memo.Remove(ob);
+            return await dbContext.SaveChangesAsync().ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully)
                 {
@@ -50,7 +51,7 @@ namespace MyToDo.Api.Service
 
         public async Task<ApiResponse> GetAllAsync(QueryParameter queryParameter)
         {
-            var query = _dbContext.Memo.AsQueryable();
+            var query = dbContext.Memo.AsQueryable();
             //var memos = _dbContext.Memo.ToListAsync();
 
             // 搜索条件
@@ -82,7 +83,7 @@ namespace MyToDo.Api.Service
 
         public async Task<ApiResponse> GetByIdAsync(int id)
         {
-            return await _dbContext.Memo.FirstOrDefaultAsync(x => x.Id == id).ContinueWith(task =>
+            return await dbContext.Memo.FirstOrDefaultAsync(x => x.Id == id).ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully && task.Result != null)
                 {
@@ -97,23 +98,19 @@ namespace MyToDo.Api.Service
 
         public async Task<ApiResponse> UpdateAsync(Memo model)
         {
-            return await _dbContext.Memo
-                 .Where(x => x.Id == model.Id)
-                 .ExecuteUpdateAsync(setters => setters
-                     .SetProperty(x => x.Title, model.Title)
-                     .SetProperty(x => x.Content, model.Content)
-                     .SetProperty(x => x.UpdateDate, DateTime.Now))
-                 .ContinueWith(task =>
-                 {
-                     if (task.IsCompletedSuccessfully)
-                     {
-                         return new ApiResponse(true, "Update completed");
-                     }
-                     else
-                     {
-                         return new ApiResponse("Failed to update Memo item.");
-                     }
-                 });
+    
+            dbContext.Memo.Update(model);
+            return await dbContext.SaveChangesAsync().ContinueWith(task =>
+            {
+                if (task.IsCompletedSuccessfully)
+                {
+                    return new ApiResponse(true, mapper.Map<MemoDto>(model));
+                }
+                else
+                {
+                    return new ApiResponse("Failed to update Memo item.");
+                }
+            });
         }
     }
 }
