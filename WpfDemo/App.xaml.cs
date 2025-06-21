@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using WpfDemo.Common;
 using WpfDemo.Sercive;
 using WpfDemo.ViewModels;
 using WpfDemo.Views;
@@ -14,6 +15,17 @@ namespace WpfDemo
         protected override Window CreateShell()
         {
             return Container.Resolve<MainView>();
+        }
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            // 在应用程序初始化后执行的代码
+            // 例如，显示主窗口或执行其他初始化逻辑
+            var service = App.Current.MainWindow.DataContext as IConfigurationService;
+            if (service != null)
+            {
+                service.Configure();
+            }
         }
         /// <summary>
         /// 注册依赖注入容器中的类型和服务。

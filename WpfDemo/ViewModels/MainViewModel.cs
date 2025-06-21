@@ -1,15 +1,15 @@
 ﻿using System.Collections.ObjectModel;
+using WpfDemo.Common;
 using WpfDemo.Common.Modles;
 using WpfDemo.Extensions;
 
 namespace WpfDemo.ViewModels
 {
-    public class MainViewModel : BindableBase
+    public class MainViewModel : BindableBase, IConfigurationService
     {
         public MainViewModel(IRegionManager regionManager)
         {
             MenuBars = new ObservableCollection<MenuBar>();
-            CreateMenuBar();
             NavigateCommond = new DelegateCommand<MenuBar>(Navigate);
             this.regionManager = regionManager;
             GoBackCommand = new DelegateCommand(() =>
@@ -90,6 +90,14 @@ namespace WpfDemo.ViewModels
                 Title = "设置",
                 NameSpace = "SettingsView"
             });
+        }
+        /// <summary>
+        /// 配置应用程序的初始状态和导航
+        /// </summary>
+        public void Configure()
+        {
+            CreateMenuBar();
+            regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("IndexView");
         }
     }
 }
