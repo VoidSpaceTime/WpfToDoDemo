@@ -2,7 +2,9 @@
 using WpfDemo.Common;
 using WpfDemo.Sercive;
 using WpfDemo.ViewModels;
+using WpfDemo.ViewModels.Dialogs;
 using WpfDemo.Views;
+using WpfDemo.Views.Dialogs;
 
 namespace WpfDemo
 {
@@ -62,6 +64,9 @@ namespace WpfDemo
             containerRegistry.Register<IToDoService, ToDoService>();
             containerRegistry.Register<IMemoService, MemoService>();
             //containerRegistry.Register<IDialogHostService, DialogHostService>();
+
+            containerRegistry.RegisterDialog<AddToDoView, AddToDoViewModel>();
+            containerRegistry.RegisterDialog<AddMemoView, AddMemoViewModel>();
         }
 
     }

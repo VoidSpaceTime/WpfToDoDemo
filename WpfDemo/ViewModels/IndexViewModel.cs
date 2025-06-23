@@ -11,10 +11,14 @@ namespace WpfDemo.ViewModels
 {
     public class IndexViewModel : BindableBase
     {
-        public IndexViewModel()
+        public IndexViewModel(IDialogService dialogService)
         {
             TaskBars = new ObservableCollection<TaskBar>();
             CreateTaskBars();
+            ExecuteCommand = new DelegateCommand<string>(Execute);
+            ToDoDtos = new ObservableCollection<MemoDto>();
+            MemoDtos = new ObservableCollection<MemoDto>();
+            DialogService = dialogService;
         }
         private ObservableCollection<TaskBar> taskBars;
 
@@ -25,6 +29,30 @@ namespace WpfDemo.ViewModels
         }
         public ObservableCollection<MemoDto> ToDoDtos { get; set; }
         public ObservableCollection<MemoDto> MemoDtos { get; set; }
+        public DelegateCommand<string> ExecuteCommand { get; set; }
+        public IDialogService DialogService { get; }
+
+        private void Execute(string obj)
+        {
+            switch (obj)
+            {
+                case "新增待办":
+                    {
+                        AddToDo();
+                    }
+                    break;
+                case "新增备忘录": AddMemo(); break;
+            }
+
+        }
+        void AddToDo()
+        {
+            DialogService.ShowDialogAsync("AddToDoView");
+        }
+        void AddMemo()
+        {
+            DialogService.ShowDialogAsync("MemoView");
+        }
         void CreateTaskBars()
         {
             TaskBars.Add(new TaskBar()
@@ -59,7 +87,6 @@ namespace WpfDemo.ViewModels
                 Color = "#FFFFA000",
                 Target = ""
             });
-
         }
     }
 }

@@ -110,6 +110,8 @@
                             Height="30"
                             VerticalAlignment="Top"
                             DockPanel.Dock="Right"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="新增待办"
                             Style="{StaticResource MaterialDesignFloatingActionSecondaryButton}">
 
                         <materialDesign:PackIcon Kind="Add"></materialDesign:PackIcon>
@@ -154,6 +156,8 @@
                             Height="30"
                             VerticalAlignment="Top"
                             DockPanel.Dock="Right"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="新增备忘录"
                             Style="{StaticResource MaterialDesignFloatingActionSecondaryButton}">
 
                         <materialDesign:PackIcon Kind="Add"></materialDesign:PackIcon>
