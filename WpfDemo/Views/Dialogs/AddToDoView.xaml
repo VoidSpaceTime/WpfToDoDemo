@@ -42,9 +42,11 @@
                             Grid.Row="2"
                             HorizontalAlignment="Right">
                     <Button Content="取消"
+                            Command="{Binding CancelCommand}"
                             Style="{StaticResource MaterialDesignOutlinedButton}"
                             Margin="10,0"></Button>
                     <Button Content="确定"
+                            Command="{Binding SaveCommand}"
                             Margin="10,0"></Button>
                 </StackPanel>
             </StackPanel>

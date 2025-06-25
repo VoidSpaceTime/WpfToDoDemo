@@ -63,10 +63,11 @@ namespace WpfDemo
             //containerRegistry.Register<ILoginService, LoginService>();
             containerRegistry.Register<IToDoService, ToDoService>();
             containerRegistry.Register<IMemoService, MemoService>();
-            //containerRegistry.Register<IDialogHostService, DialogHostService>();
 
-            containerRegistry.RegisterDialog<AddToDoView, AddToDoViewModel>();
-            containerRegistry.RegisterDialog<AddMemoView, AddMemoViewModel>();
+            containerRegistry.Register<IDialogHostService, DialogHostService>();
+
+            containerRegistry.RegisterForNavigation<AddToDoView, AddToDoViewModel>();
+            containerRegistry.RegisterForNavigation<AddMemoView, AddMemoViewModel>();
         }
 
     }

@@ -5,13 +5,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WpfDemo.Common;
 using WpfDemo.Common.Modles;
 
 namespace WpfDemo.ViewModels
 {
     public class IndexViewModel : BindableBase
     {
-        public IndexViewModel(IDialogService dialogService)
+        public IndexViewModel(IDialogHostService dialogService)
         {
             TaskBars = new ObservableCollection<TaskBar>();
             CreateTaskBars();
@@ -30,7 +31,7 @@ namespace WpfDemo.ViewModels
         public ObservableCollection<MemoDto> ToDoDtos { get; set; }
         public ObservableCollection<MemoDto> MemoDtos { get; set; }
         public DelegateCommand<string> ExecuteCommand { get; set; }
-        public IDialogService DialogService { get; }
+        public IDialogHostService DialogService { get; }
 
         private void Execute(string obj)
         {
@@ -47,11 +48,11 @@ namespace WpfDemo.ViewModels
         }
         void AddToDo()
         {
-            DialogService.ShowDialogAsync("AddToDoView");
+            DialogService.ShowDialogAsync("AddToDoView",null);
         }
         void AddMemo()
         {
-            DialogService.ShowDialogAsync("MemoView");
+            DialogService.ShowDialogAsync("MemoView", null);
         }
         void CreateTaskBars()
         {
