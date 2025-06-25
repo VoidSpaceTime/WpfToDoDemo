@@ -27,12 +27,11 @@ namespace WpfDemo.ViewModels.Dialogs
         }
         private void Save()
         {
-            var param = new DialogParameters();
-            DialogHost.Close(DialogHostName, param);
+            DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK));
         }
         private void Cancel()
         {
-            DialogHost.Close(DialogHostName);
+            DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
         }
     }
 }

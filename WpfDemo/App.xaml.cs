@@ -68,6 +68,9 @@ namespace WpfDemo
 
             containerRegistry.RegisterForNavigation<AddToDoView, AddToDoViewModel>();
             containerRegistry.RegisterForNavigation<AddMemoView, AddMemoViewModel>();
+
+            containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();
+
         }
 
     }

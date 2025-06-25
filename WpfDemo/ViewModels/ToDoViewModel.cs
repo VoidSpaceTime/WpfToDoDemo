@@ -2,12 +2,15 @@
 using MyToDo.Shared.Parameters;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using WpfDemo.Common;
+using WpfDemo.Extensions;
 using WpfDemo.Sercive;
 
 namespace WpfDemo.ViewModels
 {
     public class ToDoViewModel : NavigationViewModel
     {
+        private readonly IDialogHostService dialogHostService;
         private ObservableCollection<ToDoDto> toDoDtos;
         private DelegateCommand<string> executeCommand;
         private bool isRightDrawerOpen;
@@ -17,6 +20,7 @@ namespace WpfDemo.ViewModels
             ExecuteCommand = new DelegateCommand<string>(Execute);
             SelectedCommand = new DelegateCommand<ToDoDto>(Selected);
             DeletedCommand = new DelegateCommand<ToDoDto>(Deleted);
+            dialogHostService = containerProvider.Resolve<IDialogHostService>();
             this.toDoService = toDoService;
         }
 
@@ -190,23 +194,28 @@ namespace WpfDemo.ViewModels
             }
 
         }
-        private void Deleted(ToDoDto dto)
+        private async void Deleted(ToDoDto dto)
         {
             if (dto == null || dto.Id == 0)
             {
                 return;
             }
-            UpdateLoading(true); // 显示加载中
-            toDoService.DeleteAsync(dto.Id).ContinueWith(task =>
+            var dialogResut = await dialogHostService.Question("温馨提示", $"确认删除待办事项：{dto.Title}?");
+            if (dialogResut.Result != Prism.Dialogs.ButtonResult.OK)
             {
-                if (task.Result.Status)
-                {
-                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        ToDoDtos.Remove(dto);
-                    });
-                }
-            });
+                return;
+            }
+            UpdateLoading(true); // 显示加载中
+            await toDoService.DeleteAsync(dto.Id).ContinueWith(task =>
+              {
+                  if (task.Result.Status)
+                  {
+                      System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                      {
+                          ToDoDtos.Remove(dto);
+                      });
+                  }
+              });
             UpdateLoading(false); // 隐藏加载中
         }
     }

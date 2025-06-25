@@ -15,6 +15,12 @@ namespace WpfDemo.ViewModels
     {
         private readonly IContainerProvider containerProvider;
         private readonly IEventAggregator eventAggregator;
+
+        public NavigationViewModel(IContainerProvider containerProvider)
+        {
+            this.containerProvider = containerProvider;
+        }
+
         public NavigationViewModel(IContainerProvider containerProvider, IEventAggregator eventAggregator)
         {
             this.containerProvider = containerProvider;

@@ -1,5 +1,7 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using Prism.Events;
+using WpfDemo.Common;
 using WpfDemo.Extensions; // Ensure Prism.Events namespace is included  
 
 namespace WpfDemo.Views
@@ -9,7 +11,8 @@ namespace WpfDemo.Views
     /// </summary>  
     public partial class MainView : Window
     {
-        public MainView(IEventAggregator eventAggregator)
+        private readonly IDialogHostService dialogHostService;
+        public MainView(IEventAggregator eventAggregator, IDialogHostService dialogHostService)
         {
             InitializeComponent();
 
@@ -26,6 +29,41 @@ namespace WpfDemo.Views
             {
                 drawerHost.IsLeftDrawerOpen = false; // 选择菜单后关闭抽屉  
             };
+            this.dialogHostService = dialogHostService;
+
+            btnMin.Click += (s, e) => { this.WindowState = WindowState.Minimized; };
+            btnMax.Click += (s, e) =>
+            {
+                if (this.WindowState == WindowState.Maximized)
+                    this.WindowState = WindowState.Normal;
+                else
+                    this.WindowState = WindowState.Maximized;
+            };
+            btnClose.Click += async (s, e) =>
+            {
+                var dialogResult = await dialogHostService.Question("温馨提示", "确认退出系统?");
+                if (dialogResult.Result != Prism.Dialogs.ButtonResult.OK) return;
+                this.Close();
+            };
+            colorZone.MouseMove += (s, e) =>
+            {
+                if (e.LeftButton == MouseButtonState.Pressed)
+                    this.DragMove();
+            };
+
+            colorZone.MouseDoubleClick += (s, e) =>
+            {
+                if (this.WindowState == WindowState.Normal)
+                    this.WindowState = WindowState.Maximized;
+                else
+                    this.WindowState = WindowState.Normal;
+            };
+
+            menuBar.SelectionChanged += (s, e) =>
+            {
+                drawerHost.IsLeftDrawerOpen = false;
+            };
+            this.dialogHostService = dialogHostService;
         }
     }
 

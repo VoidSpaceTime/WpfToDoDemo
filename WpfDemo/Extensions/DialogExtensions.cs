@@ -1,14 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Prism.Dialogs;
+using WpfDemo.Common;
 using WpfDemo.Common.Events;
 
 namespace WpfDemo.Extensions
 {
     public static class DialogExtensions
     {
+        /// <summary>
+        /// 询问窗口
+        /// </summary>
+        /// <param name="dialogService"></param>
+        /// <param name="title"></param>
+        /// <param name="content"></param>
+        /// <param name="dialogHostName"></param>
+        /// <returns></returns>
+        public static async Task<IDialogResult> Question(this IDialogHostService dialogService, string title, string content, string dialogHostName = "Root")
+        {
+            var parameters = new DialogParameters
+            {
+                { "Title", title },
+                { "Content", content },
+            };
+            return await dialogService.ShowDialogAsync("MsgView", parameters, dialogHostName);
+        }
         /// <summary>
         /// 推送等待消息
         /// </summary>

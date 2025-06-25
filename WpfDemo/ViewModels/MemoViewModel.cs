@@ -1,6 +1,8 @@
 ﻿using MyToDo.Shared.Dtos;
 using MyToDo.Shared.Parameters;
 using System.Collections.ObjectModel;
+using WpfDemo.Common;
+using WpfDemo.Extensions;
 using WpfDemo.Sercive;
 
 namespace WpfDemo.ViewModels
@@ -11,13 +13,14 @@ namespace WpfDemo.ViewModels
         private DelegateCommand<string> executeCommand;
         private bool isRightDrawerOpen;
         private readonly IMemoService memoService;
-
+        private readonly IDialogHostService dialogHostService;
         public MemoViewModel(IMemoService memoService, IContainerProvider containerProvider, IEventAggregator eventAggregator) : base(containerProvider, eventAggregator)
         {
             MemoDtos = new ObservableCollection<MemoDto> { };
             ExecuteCommand = new DelegateCommand<string>(Execute);
             SelectedCommand = new DelegateCommand<MemoDto>(Selected);
             DeletedCommand = new DelegateCommand<MemoDto>(Deleted);
+            dialogHostService = containerProvider.Resolve<IDialogHostService>();
             this.memoService = memoService;
         }
 
@@ -51,7 +54,7 @@ namespace WpfDemo.ViewModels
             get { return search; }
             set { search = value; RaisePropertyChanged(); }
         }
-  
+
 
         public DelegateCommand<MemoDto> SelectedCommand { get; private set; }
         public DelegateCommand<MemoDto> DeletedCommand { get; private set; }
@@ -156,7 +159,7 @@ namespace WpfDemo.ViewModels
                 else
                 {
                     // 编辑
-                    memoService.    UpdateAsync(CurrentDto).ContinueWith(task =>
+                    memoService.UpdateAsync(CurrentDto).ContinueWith(task =>
                     {
                         if (task.Result.Status)
                         {
@@ -182,23 +185,28 @@ namespace WpfDemo.ViewModels
             }
 
         }
-        private void Deleted(MemoDto dto)
+        private async void Deleted(MemoDto dto)
         {
             if (dto == null || dto.Id == 0)
             {
                 return;
             }
-            UpdateLoading(true); // 显示加载中
-            memoService.DeleteAsync(dto.Id).ContinueWith(task =>
+            var dialogResut = await dialogHostService.Question("温馨提示", $"确认删除备忘录事项：{dto.Title}?");
+            if (dialogResut.Result != Prism.Dialogs.ButtonResult.OK)
             {
-                if (task.Result.Status)
-                {
-                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        MemoDtos.Remove(dto);
-                    });
-                }
-            });
+                return;
+            }
+            UpdateLoading(true); // 显示加载中
+            await memoService.DeleteAsync(dto.Id).ContinueWith(task =>
+               {
+                   if (task.Result.Status)
+                   {
+                       System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                       {
+                           MemoDtos.Remove(dto);
+                       });
+                   }
+               });
             UpdateLoading(false); // 隐藏加载中
         }
     }
