@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:md="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="450"
-             d:DesignWidth="280">
+             Width="450"
+             Height="300"
+             d:DesignHeight="280"
+             d:DesignWidth="450">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -19,32 +21,29 @@
                    FontWeight="Bold"></TextBlock>
         <DockPanel Grid.Row="1"
                    LastChildFill="False">
-            <StackPanel DockPanel.Dock="Top">
-                <ComboBox Margin="20,0">
-                    <ComboBoxItem>待办</ComboBoxItem>
-                    <ComboBoxItem>已完成</ComboBoxItem>
-                </ComboBox>
-                <TextBox Margin="20,0"
-                         md:HintAssist.Hint="请输入备忘录概要"
-                         DockPanel.Dock="Top"></TextBox>
-                <TextBox Margin="20,0"
-                         md:HintAssist.Hint="请输入备忘录内容"
-                         MinHeight="100"
-                         TextWrapping="Wrap"
-                         AcceptsReturn="True"
-                         DockPanel.Dock="Top"></TextBox>
-                <StackPanel Orientation="Horizontal"
-                            Margin="10"
-                            Grid.Row="2"
-                            HorizontalAlignment="Right">
-                    <Button Content="取消"
-                            Command="{Binding CancelCommand}"
-                            Style="{StaticResource MaterialDesignOutlinedButton}"
-                            Margin="10,0"></Button>
-                    <Button Content="确定"
-                            Command="{Binding SaveCommand}"
-                            Margin="10,0"></Button>
-                </StackPanel>
+            <TextBox Margin="20,0"
+                     Text="{Binding Model.Title}"
+                     md:HintAssist.Hint="请输入备忘录概要"
+                     DockPanel.Dock="Top"></TextBox>
+            <TextBox Margin="20,0"
+                     md:HintAssist.Hint="请输入备忘录内容"
+                     Text="{Binding Model.Content}"
+                     MinHeight="100"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     DockPanel.Dock="Top"></TextBox>
+            <StackPanel Orientation="Horizontal"
+                        DockPanel.Dock="Right"
+                        Margin="10"
+                        Grid.Row="2"
+                        HorizontalAlignment="Right">
+                <Button Content="取消"
+                        Command="{Binding CancelCommand}"
+                        Style="{StaticResource MaterialDesignOutlinedButton}"
+                        Margin="10,0"></Button>
+                <Button Content="确定"
+                        Command="{Binding SaveCommand}"
+                        Margin="10,0"></Button>
             </StackPanel>
         </DockPanel>
     </Grid>

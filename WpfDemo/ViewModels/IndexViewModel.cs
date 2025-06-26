@@ -1,4 +1,5 @@
 ﻿using MyToDo.Shared.Dtos;
+using Prism.Ioc;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,20 +8,28 @@ using System.Text;
 using System.Threading.Tasks;
 using WpfDemo.Common;
 using WpfDemo.Common.Modles;
+using WpfDemo.Sercive;
 
 namespace WpfDemo.ViewModels
 {
-    public class IndexViewModel : BindableBase
+    public class IndexViewModel : NavigationViewModel
     {
-        public IndexViewModel(IDialogHostService dialogService)
+        private readonly IToDoService toDoService;
+        private readonly IMemoService memoService;
+        public IDialogHostService DialogService { get; }
+        public IndexViewModel(IDialogHostService dialogService, IContainerProvider containerProvider) : base(containerProvider)
         {
+            toDoService = containerProvider.Resolve<IToDoService>();
+            memoService = containerProvider.Resolve<IMemoService>();
+            ExecuteCommand = new DelegateCommand<string>(Execute);
+            ToDoDtos = new ObservableCollection<ToDoDto>();
+            MemoDtos = new ObservableCollection<MemoDto>();
             TaskBars = new ObservableCollection<TaskBar>();
             CreateTaskBars();
-            ExecuteCommand = new DelegateCommand<string>(Execute);
-            ToDoDtos = new ObservableCollection<MemoDto>();
-            MemoDtos = new ObservableCollection<MemoDto>();
             DialogService = dialogService;
         }
+
+
         private ObservableCollection<TaskBar> taskBars;
 
         public ObservableCollection<TaskBar> TaskBars
@@ -28,10 +37,9 @@ namespace WpfDemo.ViewModels
             get { return taskBars; }
             set { taskBars = value; RaisePropertyChanged(); }
         }
-        public ObservableCollection<MemoDto> ToDoDtos { get; set; }
+        public ObservableCollection<ToDoDto> ToDoDtos { get; set; }
         public ObservableCollection<MemoDto> MemoDtos { get; set; }
         public DelegateCommand<string> ExecuteCommand { get; set; }
-        public IDialogHostService DialogService { get; }
 
         private void Execute(string obj)
         {
@@ -46,13 +54,47 @@ namespace WpfDemo.ViewModels
             }
 
         }
-        void AddToDo()
+        async Task AddToDo()
         {
-            DialogService.ShowDialogAsync("AddToDoView",null);
+            var dialogResult = await DialogService.ShowDialogAsync("AddToDoView", null);
+            if (dialogResult.Result == ButtonResult.OK)
+            {
+                var todo = dialogResult.Parameters.GetValue<ToDoDto>("Value");
+                if (todo.Id > 0)
+                {
+
+                }
+                else
+                {
+                    // 新增待办
+                    var result = await toDoService.AddAsync(todo);
+                    if (result.Status)
+                    {
+                        ToDoDtos.Add(result.Data);
+                    }
+                }
+            }
         }
-        void AddMemo()
+        async void AddMemo()
         {
-            DialogService.ShowDialogAsync("MemoView", null);
+            var dialogResult = await DialogService.ShowDialogAsync("AddMemoView", null);
+            if (dialogResult.Result == ButtonResult.OK)
+            {
+                var memo = dialogResult.Parameters.GetValue<MemoDto>("Value");
+                if (memo.Id > 0)
+                {
+
+                }
+                else
+                {
+                    // 新增待办
+                    var result = await memoService.AddAsync(memo);
+                    if (result.Status)
+                    {
+                        MemoDtos.Add(result.Data);
+                    }
+                }
+            }
         }
         void CreateTaskBars()
         {

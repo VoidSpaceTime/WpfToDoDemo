@@ -1,14 +1,10 @@
 ﻿using MaterialDesignThemes.Wpf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MyToDo.Shared.Dtos;
 using WpfDemo.Common;
 
 namespace WpfDemo.ViewModels.Dialogs
 {
-    internal class AddMemoViewModel : IDialogHostAware
+    internal class AddMemoViewModel : BindableBase, IDialogHostAware
     {
         public AddMemoViewModel()
         {
@@ -21,13 +17,34 @@ namespace WpfDemo.ViewModels.Dialogs
         public string DialogHostName { get; set; }
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand CancelCommand { get; set; }
+        private MemoDto model;
 
+        public MemoDto Model
+        {
+            get { return model; }
+            set { model = value; RaisePropertyChanged(); }
+        }
         public void OnDialogOpend(IDialogParameters parameters)
         {
+            if (parameters.ContainsKey("Value"))
+            {
+                Model = parameters.GetValue<MemoDto>("Value");
+            }
+            else
+            {
+                Model = new MemoDto();
+            }
         }
         private void Save()
         {
-            DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK));
+            if (string.IsNullOrWhiteSpace(Model.Title) || string.IsNullOrWhiteSpace(Model.Content))
+            {
+                return;
+            }
+
+            var result = new DialogResult(ButtonResult.OK);
+            result.Parameters.Add("Value", Model);
+            DialogHost.Close(DialogHostName, result);
         }
         private void Cancel()
         {
