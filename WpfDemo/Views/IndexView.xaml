@@ -8,9 +8,14 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:viewmodels="clr-namespace:WpfDemo.ViewModels"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:cv="clr-namespace:WpfDemo.Common.Converters"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
+    <UserControl.Resources>
+        <cv:IntToBoolConverter x:Key="IntToBool" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -117,14 +122,25 @@
                         <materialDesign:PackIcon Kind="Add"></materialDesign:PackIcon>
                     </Button>
                 </DockPanel>
-                <ListBox ItemsSource="{Binding ToDoDtos}"
+                <ListBox x:Name="ToDoListBox"
+                         Margin="0,5"
+                         ItemsSource="{Binding ToDoDtos}"
                          HorizontalContentAlignment="Stretch"
                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="MouseDoubleClick">
+
+                            <b:InvokeCommandAction Command="{Binding EditToDoCommand}"
+                                                   CommandParameter="{Binding ElementName=ToDoListBox, Path=SelectedItem}" />
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <DockPanel MaxHeight="80">
-                                <ToggleButton DockPanel.Dock="Right">
-
+                                <ToggleButton DockPanel.Dock="Right"
+                                              IsChecked="{Binding Status ,Converter={StaticResource IntToBool}}"
+                                              Command="{Binding DataContext.ToDoCompltedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                              CommandParameter="{Binding}">
                                 </ToggleButton>
                                 <StackPanel>
                                     <TextBlock Text="{Binding Title}"
@@ -163,8 +179,17 @@
                         <materialDesign:PackIcon Kind="Add"></materialDesign:PackIcon>
                     </Button>
                 </DockPanel>
-                <ListBox ItemsSource="{Binding MemoDtos}"
+                <ListBox x:Name="MemoListBox"
+                         Margin="0,5"
+                         ItemsSource="{Binding MemoDtos}"
                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="MouseDoubleClick">
+
+                            <b:InvokeCommandAction Command="{Binding EditMemoCommand}"
+                                                   CommandParameter="{Binding ElementName=MemoListBox, Path=SelectedItem}" />
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>

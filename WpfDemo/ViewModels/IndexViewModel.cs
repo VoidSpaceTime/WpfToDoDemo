@@ -27,6 +27,9 @@ namespace WpfDemo.ViewModels
             TaskBars = new ObservableCollection<TaskBar>();
             CreateTaskBars();
             DialogService = dialogService;
+            EditToDoCommand = new DelegateCommand<ToDoDto>(AddToDo);
+            EditMemoCommand = new DelegateCommand<MemoDto>(AddMemo);
+            ToDoCompltedCommand = new DelegateCommand<ToDoDto>(Complted);
         }
 
 
@@ -39,7 +42,10 @@ namespace WpfDemo.ViewModels
         }
         public ObservableCollection<ToDoDto> ToDoDtos { get; set; }
         public ObservableCollection<MemoDto> MemoDtos { get; set; }
-        public DelegateCommand<string> ExecuteCommand { get; set; }
+        public DelegateCommand<string> ExecuteCommand { get; private set; }
+        public DelegateCommand<ToDoDto> EditToDoCommand { get; private set; }
+        public DelegateCommand<MemoDto> EditMemoCommand { get; private set; }
+        public DelegateCommand<ToDoDto> ToDoCompltedCommand { get; private set; }
 
         private void Execute(string obj)
         {
@@ -47,22 +53,39 @@ namespace WpfDemo.ViewModels
             {
                 case "新增待办":
                     {
-                        AddToDo();
+                        AddToDo(null);
                     }
                     break;
-                case "新增备忘录": AddMemo(); break;
+                case "新增备忘录": AddMemo(null); break;
             }
 
         }
-        async Task AddToDo()
+        async void AddToDo(ToDoDto toDoDto)
         {
-            var dialogResult = await DialogService.ShowDialogAsync("AddToDoView", null);
+            var dialogParameters = new DialogParameters();
+            if (toDoDto != null)
+            {
+                dialogParameters.Add("Value", toDoDto);
+            }
+
+            var dialogResult = await DialogService.ShowDialogAsync("AddToDoView", dialogParameters);
             if (dialogResult.Result == ButtonResult.OK)
             {
                 var todo = dialogResult.Parameters.GetValue<ToDoDto>("Value");
                 if (todo.Id > 0)
                 {
-
+                    await toDoService.UpdateAsync(todo).ContinueWith(t =>
+                      {
+                          if (t.Result.Status)
+                          {
+                              var td = ToDoDtos.FirstOrDefault(ToDoDtos.FirstOrDefault(x => x.Id == todo.Id));
+                              if (td != null)
+                              {
+                                  td.Title = todo.Title;
+                                  td.Content = todo.Content;
+                              }
+                          }
+                      });
                 }
                 else
                 {
@@ -75,15 +98,32 @@ namespace WpfDemo.ViewModels
                 }
             }
         }
-        async void AddMemo()
+        async void AddMemo(MemoDto memoDto)
         {
-            var dialogResult = await DialogService.ShowDialogAsync("AddMemoView", null);
+            var dialogParameters = new DialogParameters();
+            if (memoDto != null)
+            {
+                dialogParameters.Add("Value", memoDto);
+            }
+            var dialogResult = await DialogService.ShowDialogAsync("AddMemoView", dialogParameters);
             if (dialogResult.Result == ButtonResult.OK)
             {
                 var memo = dialogResult.Parameters.GetValue<MemoDto>("Value");
+
                 if (memo.Id > 0)
                 {
-
+                    await memoService.UpdateAsync(memo).ContinueWith(t =>
+                    {
+                        if (t.Result.Status)
+                        {
+                            var mm = ToDoDtos.FirstOrDefault(ToDoDtos.FirstOrDefault(x => x.Id == memo.Id));
+                            if (mm != null)
+                            {
+                                mm.Title = memo.Title;
+                                mm.Content = memo.Content;
+                            }
+                        }
+                    });
                 }
                 else
                 {
@@ -93,6 +133,20 @@ namespace WpfDemo.ViewModels
                     {
                         MemoDtos.Add(result.Data);
                     }
+                }
+            }
+        }
+        private async void Complted(ToDoDto toDoDto)
+        {
+            if (toDoDto == null) return;
+            toDoDto.Status = 1; // 设置为已完成
+            var result = await toDoService.UpdateAsync(toDoDto);
+            if (result.Status)
+            {
+                var find = ToDoDtos.FirstOrDefault(x => x.Id.Equals(toDoDto.Id));
+                if (find != null)
+                {
+                    ToDoDtos.Remove(find);
                 }
             }
         }
