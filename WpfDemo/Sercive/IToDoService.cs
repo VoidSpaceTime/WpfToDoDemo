@@ -12,5 +12,6 @@ namespace WpfDemo.Sercive
     public interface IToDoService : IBaseService<ToDoDto>
     {
         public Task<ApiResponse<PagedList<ToDoDto>>> GetAllFilterAsync(ToDoParameter parameter);
+        public Task<ApiResponse<SummaryDto>> GetSummaryAsync();
     }
 }

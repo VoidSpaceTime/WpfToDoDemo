@@ -124,7 +124,7 @@
                 </DockPanel>
                 <ListBox x:Name="ToDoListBox"
                          Margin="0,5"
-                         ItemsSource="{Binding ToDoDtos}"
+                         ItemsSource="{Binding Summary.ToDoList}"
                          HorizontalContentAlignment="Stretch"
                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <b:Interaction.Triggers>
@@ -181,7 +181,7 @@
                 </DockPanel>
                 <ListBox x:Name="MemoListBox"
                          Margin="0,5"
-                         ItemsSource="{Binding MemoDtos}"
+                         ItemsSource="{Binding Summary.MemoList}"
                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <b:Interaction.Triggers>
                         <b:EventTrigger EventName="MouseDoubleClick">

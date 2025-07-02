@@ -4,6 +4,7 @@ using MyToDo.Api.Context;
 using MyToDo.Shared;
 using MyToDo.Shared.Dtos;
 using MyToDo.Shared.Parameters;
+using System.Collections.ObjectModel;
 
 namespace MyToDo.Api.Service
 {
@@ -145,6 +146,29 @@ namespace MyToDo.Api.Service
 
 
             return new ApiResponse(true, result);
+        }
+
+        public async Task<ApiResponse> GetSummary()
+        {
+            // Fetch all ToDo items and Memo items from the database
+            var todoList = await dbContext.ToDo.ToListAsync();
+            var memoList = await dbContext.Memo.ToListAsync();
+            todoList = todoList.OrderByDescending(t => t.CreateTime).ToList();
+            memoList = memoList.OrderByDescending(t => t.CreateTime).ToList();
+            // Create a summary object with the required calculations
+            SummaryDto summary = new SummaryDto
+            {
+                Sum = todoList.Count,
+                CompletedCount = todoList.Count(t => t.Status == 1),
+                MemoCount = memoList.Count,
+                ToDoCount = todoList.Count(t => t.Status == 0),
+                CompletedRadio = (todoList.Count > 0 ? (todoList.Count(t => t.Status == 1) / (double)todoList.Count) * 100 : 0).ToString("0%"),
+                ToDoList = mapper.Map<ObservableCollection<ToDoDto>>(todoList.Where(o => o.Status == 0)),
+                MemoList = mapper.Map<ObservableCollection<MemoDto>>(memoList)
+            };
+
+            // Return the summary wrapped in an ApiResponse
+            return new ApiResponse(true, summary);
         }
     }
 }

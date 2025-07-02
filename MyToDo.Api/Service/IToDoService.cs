@@ -8,5 +8,6 @@ namespace MyToDo.Api.Service
     public interface IToDoService : IBaseService<ToDo>
     {
         Task<ApiResponse> GetFliterAll(ToDoParameter toDoParameter);
+        Task<ApiResponse> GetSummary();
     }
 }

@@ -27,8 +27,8 @@ namespace MyToDo.Api.Controllers
         [HttpGet]
         public async Task<ApiResponse> GetAll([FromQuery] ToDoParameter parameter) => await toDoService.GetFliterAll(parameter);
 
-        //[HttpGet]
-        //public async Task<ApiResponse> Summary() => await toDoService.Summary();
+        [HttpGet]
+        public async Task<ApiResponse> GetSummary() => await toDoService.GetSummary();
 
         [HttpPost]
         public async Task<ApiResponse> Add([FromBody] ToDoDto model) => await toDoService.AddAsync(mapper.Map<ToDo>(model));

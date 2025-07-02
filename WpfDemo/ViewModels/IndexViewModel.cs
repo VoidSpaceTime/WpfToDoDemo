@@ -22,8 +22,6 @@ namespace WpfDemo.ViewModels
             toDoService = containerProvider.Resolve<IToDoService>();
             memoService = containerProvider.Resolve<IMemoService>();
             ExecuteCommand = new DelegateCommand<string>(Execute);
-            ToDoDtos = new ObservableCollection<ToDoDto>();
-            MemoDtos = new ObservableCollection<MemoDto>();
             TaskBars = new ObservableCollection<TaskBar>();
             CreateTaskBars();
             DialogService = dialogService;
@@ -40,12 +38,19 @@ namespace WpfDemo.ViewModels
             get { return taskBars; }
             set { taskBars = value; RaisePropertyChanged(); }
         }
-        public ObservableCollection<ToDoDto> ToDoDtos { get; set; }
-        public ObservableCollection<MemoDto> MemoDtos { get; set; }
+
         public DelegateCommand<string> ExecuteCommand { get; private set; }
         public DelegateCommand<ToDoDto> EditToDoCommand { get; private set; }
         public DelegateCommand<MemoDto> EditMemoCommand { get; private set; }
         public DelegateCommand<ToDoDto> ToDoCompltedCommand { get; private set; }
+        private SummaryDto summary;
+
+        public SummaryDto Summary
+        {
+            get { return summary; }
+            set { summary = value; RaisePropertyChanged(); }
+        }
+
 
         private void Execute(string obj)
         {
@@ -58,6 +63,7 @@ namespace WpfDemo.ViewModels
                     break;
                 case "新增备忘录": AddMemo(null); break;
             }
+            Refresh();
 
         }
         async void AddToDo(ToDoDto toDoDto)
@@ -78,7 +84,7 @@ namespace WpfDemo.ViewModels
                       {
                           if (t.Result.Status)
                           {
-                              var td = ToDoDtos.FirstOrDefault(ToDoDtos.FirstOrDefault(x => x.Id == todo.Id));
+                              var td = Summary.ToDoList.FirstOrDefault(Summary.ToDoList.FirstOrDefault(x => x.Id == todo.Id));
                               if (td != null)
                               {
                                   td.Title = todo.Title;
@@ -93,7 +99,7 @@ namespace WpfDemo.ViewModels
                     var result = await toDoService.AddAsync(todo);
                     if (result.Status)
                     {
-                        ToDoDtos.Add(result.Data);
+                        Summary.ToDoList.Add(result.Data);
                     }
                 }
             }
@@ -116,7 +122,7 @@ namespace WpfDemo.ViewModels
                     {
                         if (t.Result.Status)
                         {
-                            var mm = ToDoDtos.FirstOrDefault(ToDoDtos.FirstOrDefault(x => x.Id == memo.Id));
+                            var mm = Summary.ToDoList.FirstOrDefault(Summary.ToDoList.FirstOrDefault(x => x.Id == memo.Id));
                             if (mm != null)
                             {
                                 mm.Title = memo.Title;
@@ -131,7 +137,7 @@ namespace WpfDemo.ViewModels
                     var result = await memoService.AddAsync(memo);
                     if (result.Status)
                     {
-                        MemoDtos.Add(result.Data);
+                        Summary.MemoList.Add(result.Data);
                     }
                 }
             }
@@ -143,10 +149,10 @@ namespace WpfDemo.ViewModels
             var result = await toDoService.UpdateAsync(toDoDto);
             if (result.Status)
             {
-                var find = ToDoDtos.FirstOrDefault(x => x.Id.Equals(toDoDto.Id));
+                var find = Summary.ToDoList.FirstOrDefault(x => x.Id.Equals(toDoDto.Id));
                 if (find != null)
                 {
-                    ToDoDtos.Remove(find);
+                    Summary.ToDoList.Remove(find);
                 }
             }
         }
@@ -156,7 +162,6 @@ namespace WpfDemo.ViewModels
             {
                 Title = "汇总",
                 Icon = "ExpandAll",
-                Content = "9",
                 Color = "#FFCA0FF",
                 Target = ""
             });
@@ -164,7 +169,6 @@ namespace WpfDemo.ViewModels
             {
                 Title = "已完成",
                 Icon = "ClockCheckOutline",
-                Content = "9",
                 Color = "#FF1ECA3A",
                 Target = ""
             });
@@ -172,7 +176,6 @@ namespace WpfDemo.ViewModels
             {
                 Title = "完成比例",
                 Icon = "ChartLineVariant",
-                Content = "100%",
                 Color = "#FF02C6DC",
                 Target = ""
             });
@@ -180,10 +183,32 @@ namespace WpfDemo.ViewModels
             {
                 Title = "备忘录",
                 Icon = "PlayerlistStart",
-                Content = "9",
                 Color = "#FFFFA000",
                 Target = ""
             });
+        }
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
+
+            Refresh();
+            base.OnNavigatedTo(navigationContext);
+
+        }
+        async void Refresh()
+        {
+            var summaryResult = await toDoService.GetSummaryAsync();
+            if (summaryResult.Status)
+            {
+                Summary = summaryResult.Data;
+            }
+            else
+            {
+                Summary = new SummaryDto();
+            }
+            TaskBars[0].Content = Summary.ToDoCount.ToString();
+            TaskBars[1].Content = Summary.CompletedCount.ToString();
+            TaskBars[2].Content = Summary.CompletedRadio;
+            TaskBars[3].Content = Summary.MemoCount.ToString();
         }
     }
 }

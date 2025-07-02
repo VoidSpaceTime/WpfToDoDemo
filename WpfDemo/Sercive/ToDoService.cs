@@ -5,6 +5,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace WpfDemo.Sercive
         }
 
 
-       public async Task<ApiResponse<PagedList<ToDoDto>>> GetAllFilterAsync(ToDoParameter parameter)
+        public async Task<ApiResponse<PagedList<ToDoDto>>> GetAllFilterAsync(ToDoParameter parameter)
         {
             var requset = new BaseRequest
             {
@@ -32,6 +33,18 @@ namespace WpfDemo.Sercive
                 ContentType = "application/json",
             };
             var res = await restClient.ExcuteAsync<PagedList<ToDoDto>>(requset);
+            return res;
+        }
+
+        public async Task<ApiResponse<SummaryDto>> GetSummaryAsync()
+        {
+            var requset = new BaseRequest
+            {
+                Metod = Method.Get,
+                Route = $"api/ToDo/GetSummary"
+            };
+
+            var res = await restClient.ExcuteAsync<SummaryDto>(requset);
             return res;
         }
     }

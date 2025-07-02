@@ -32,7 +32,7 @@ namespace WpfDemo.Common.Modles
         public string Content
         {
             get { return content; }
-            set { content = value; }
+            set { content = value;  RaisePropertyChanged(); }
         }
 
 
