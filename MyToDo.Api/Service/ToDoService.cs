@@ -162,7 +162,7 @@ namespace MyToDo.Api.Service
                 CompletedCount = todoList.Count(t => t.Status == 1),
                 MemoCount = memoList.Count,
                 ToDoCount = todoList.Count(t => t.Status == 0),
-                CompletedRadio = (todoList.Count > 0 ? (todoList.Count(t => t.Status == 1) / (double)todoList.Count) * 100 : 0).ToString("0%"),
+                CompletedRadio = (todoList.Count > 0 ? ((todoList.Count(t => t.Status == 1) / (double)todoList.Count)): 0).ToString("0%"),
                 ToDoList = mapper.Map<ObservableCollection<ToDoDto>>(todoList.Where(o => o.Status == 0)),
                 MemoList = mapper.Map<ObservableCollection<MemoDto>>(memoList)
             };

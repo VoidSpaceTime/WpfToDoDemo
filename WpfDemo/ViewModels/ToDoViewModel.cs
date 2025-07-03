@@ -99,6 +99,8 @@ namespace WpfDemo.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
+            navigationContext.Parameters.TryGetValue("Value", out int selectIndex);
+            SelectIndex = selectIndex;
 
             GetDataAsync();
 

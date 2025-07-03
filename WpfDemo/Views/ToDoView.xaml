@@ -85,7 +85,7 @@
                                   Margin="10,0"
                                   VerticalAlignment="Center"
                                   HorizontalAlignment="Center" />
-                    <ComboBox SelectedIndex="{Binding SelectIndex}">
+                    <ComboBox SelectedIndex="{Binding SelectIndex, Mode=TwoWay}">
                         <ComboBoxItem>全部</ComboBoxItem>
                         <ComboBoxItem>代办</ComboBoxItem>
                         <ComboBoxItem>已完成</ComboBoxItem>

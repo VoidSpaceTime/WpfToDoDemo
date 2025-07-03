@@ -1,5 +1,6 @@
 ﻿using MyToDo.Shared.Dtos;
 using Prism.Ioc;
+using Prism.Navigation.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WpfDemo.Common;
 using WpfDemo.Common.Modles;
+using WpfDemo.Extensions;
 using WpfDemo.Sercive;
 
 namespace WpfDemo.ViewModels
@@ -16,18 +18,22 @@ namespace WpfDemo.ViewModels
     {
         private readonly IToDoService toDoService;
         private readonly IMemoService memoService;
+        private readonly IRegionManager regionManager;
         public IDialogHostService DialogService { get; }
         public IndexViewModel(IDialogHostService dialogService, IContainerProvider containerProvider) : base(containerProvider)
         {
-            toDoService = containerProvider.Resolve<IToDoService>();
-            memoService = containerProvider.Resolve<IMemoService>();
+            this.toDoService = containerProvider.Resolve<IToDoService>();
+            this.memoService = containerProvider.Resolve<IMemoService>();
+            this.regionManager = containerProvider.Resolve<IRegionManager>();
             ExecuteCommand = new DelegateCommand<string>(Execute);
             TaskBars = new ObservableCollection<TaskBar>();
+            Title = $"你好 现在是{DateTime.Now:yyyy年MM月dd日 dddd}";
             CreateTaskBars();
             DialogService = dialogService;
             EditToDoCommand = new DelegateCommand<ToDoDto>(AddToDo);
             EditMemoCommand = new DelegateCommand<MemoDto>(AddMemo);
             ToDoCompltedCommand = new DelegateCommand<ToDoDto>(Complted);
+            NavigateCommand = new DelegateCommand<TaskBar>(Navigate);
         }
 
 
@@ -43,12 +49,19 @@ namespace WpfDemo.ViewModels
         public DelegateCommand<ToDoDto> EditToDoCommand { get; private set; }
         public DelegateCommand<MemoDto> EditMemoCommand { get; private set; }
         public DelegateCommand<ToDoDto> ToDoCompltedCommand { get; private set; }
+        public DelegateCommand<TaskBar> NavigateCommand { get; private set; }
         private SummaryDto summary;
-
         public SummaryDto Summary
         {
             get { return summary; }
             set { summary = value; RaisePropertyChanged(); }
+        }
+        private string title;
+
+        public string Title
+        {
+            get { return title; }
+            set { title = value; RaisePropertyChanged(); }
         }
 
 
@@ -63,8 +76,6 @@ namespace WpfDemo.ViewModels
                     break;
                 case "新增备忘录": AddMemo(null); break;
             }
-            Refresh();
-
         }
         async void AddToDo(ToDoDto toDoDto)
         {
@@ -103,6 +114,7 @@ namespace WpfDemo.ViewModels
                     }
                 }
             }
+            Refresh();
         }
         async void AddMemo(MemoDto memoDto)
         {
@@ -141,6 +153,7 @@ namespace WpfDemo.ViewModels
                     }
                 }
             }
+            Refresh();
         }
         private async void Complted(ToDoDto toDoDto)
         {
@@ -155,6 +168,7 @@ namespace WpfDemo.ViewModels
                     Summary.ToDoList.Remove(find);
                 }
             }
+            Refresh();
         }
         void CreateTaskBars()
         {
@@ -163,14 +177,14 @@ namespace WpfDemo.ViewModels
                 Title = "汇总",
                 Icon = "ExpandAll",
                 Color = "#FFCA0FF",
-                Target = ""
+                Target = "ToDoView"
             });
             TaskBars.Add(new TaskBar()
             {
                 Title = "已完成",
                 Icon = "ClockCheckOutline",
                 Color = "#FF1ECA3A",
-                Target = ""
+                Target = "ToDoView"
             });
             TaskBars.Add(new TaskBar()
             {
@@ -184,10 +198,10 @@ namespace WpfDemo.ViewModels
                 Title = "备忘录",
                 Icon = "PlayerlistStart",
                 Color = "#FFFFA000",
-                Target = ""
+                Target = "MemoView"
             });
         }
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
 
             Refresh();
@@ -205,10 +219,21 @@ namespace WpfDemo.ViewModels
             {
                 Summary = new SummaryDto();
             }
-            TaskBars[0].Content = Summary.ToDoCount.ToString();
+            TaskBars[0].Content = Summary.Sum.ToString();
             TaskBars[1].Content = Summary.CompletedCount.ToString();
             TaskBars[2].Content = Summary.CompletedRadio;
             TaskBars[3].Content = Summary.MemoCount.ToString();
         }
+        private void Navigate(TaskBar bar)
+        {
+            if (string.IsNullOrWhiteSpace(bar.Target)) return;
+            var param = new NavigationParameters();
+            if (bar.Title == "已完成")
+            {
+                param.Add("Value", 2); // 传递已完成状态
+            }
+            regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(bar.Target, param);
+        }
+
     }
 }
