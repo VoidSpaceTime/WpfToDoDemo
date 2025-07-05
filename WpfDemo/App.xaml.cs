@@ -20,14 +20,28 @@ namespace WpfDemo
         }
         protected override void OnInitialized()
         {
-            base.OnInitialized();
             // 在应用程序初始化后执行的代码
-            // 例如，显示主窗口或执行其他初始化逻辑
-            var service = App.Current.MainWindow.DataContext as IConfigurationService;
-            if (service != null)
+            // 获取依赖注入容器中的 IDialogService 实例
+            var dialog = Container.Resolve<IDialogService>();
+            dialog.ShowDialog("LoginView", callback =>
             {
-                service.Configure();
-            }
+                if (callback.Result != ButtonResult.OK)
+                {
+                    // 如果登录失败，则关闭应用程序
+                    Application.Current.Shutdown();
+                    return;
+                }
+                else
+                {
+                    // 例如，显示主窗口或执行其他初始化逻辑
+                    var service = App.Current.MainWindow.DataContext as IConfigurationService;
+                    if (service != null)
+                    {
+                        service.Configure();
+                    }
+                    base.OnInitialized();
+                }
+            }); 
         }
         /// <summary>
         /// 注册依赖注入容器中的类型和服务。
@@ -71,6 +85,8 @@ namespace WpfDemo
             containerRegistry.RegisterForNavigation<AddMemoView, AddMemoViewModel>();
 
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();
+
+            containerRegistry.RegisterDialog<LoginView, LoginViewModel>();
 
         }
 
