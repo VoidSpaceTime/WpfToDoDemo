@@ -19,8 +19,10 @@ namespace WpfDemo.ViewModels
         private readonly IToDoService toDoService;
         private readonly IMemoService memoService;
         private readonly IRegionManager regionManager;
+        private readonly IEventAggregator eventAggregator;
         public IDialogHostService DialogService { get; }
-        public IndexViewModel(IDialogHostService dialogService, IContainerProvider containerProvider) : base(containerProvider)
+        public IndexViewModel(IDialogHostService dialogService, IContainerProvider containerProvider, IEventAggregator eventAggregator)
+            : base(containerProvider, eventAggregator)
         {
             this.toDoService = containerProvider.Resolve<IToDoService>();
             this.memoService = containerProvider.Resolve<IMemoService>();
@@ -34,6 +36,7 @@ namespace WpfDemo.ViewModels
             EditMemoCommand = new DelegateCommand<MemoDto>(AddMemo);
             ToDoCompltedCommand = new DelegateCommand<ToDoDto>(Complted);
             NavigateCommand = new DelegateCommand<TaskBar>(Navigate);
+            this.eventAggregator = eventAggregator;
         }
 
 
@@ -169,6 +172,7 @@ namespace WpfDemo.ViewModels
                 }
             }
             Refresh();
+            eventAggregator.SendMessage($"已完成!");
         }
         void CreateTaskBars()
         {
@@ -210,6 +214,7 @@ namespace WpfDemo.ViewModels
         }
         async void Refresh()
         {
+            UpdateLoading(true);
             var summaryResult = await toDoService.GetSummaryAsync();
             if (summaryResult.Status)
             {
@@ -223,6 +228,7 @@ namespace WpfDemo.ViewModels
             TaskBars[1].Content = Summary.CompletedCount.ToString();
             TaskBars[2].Content = Summary.CompletedRadio;
             TaskBars[3].Content = Summary.MemoCount.ToString();
+            UpdateLoading(false);
         }
         private void Navigate(TaskBar bar)
         {

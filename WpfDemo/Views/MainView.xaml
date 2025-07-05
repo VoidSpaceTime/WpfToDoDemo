@@ -83,75 +83,81 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <!-- 窗口内容 -->
-                <DockPanel>
-                    <materialDesign:ColorZone Padding="16"
-                                              materialDesign:ElevationAssist.Elevation="Dp4"
-                                              DockPanel.Dock="Top"
-                                              x:Name="colorZone"
-                                              Mode="PrimaryMid">
-                        <DockPanel LastChildFill="False">
-                            <StackPanel Orientation="Horizontal"
-                                        DockPanel.Dock="Right">
-                                <Image Width="30"
-                                       Height="30"
-                                       Source="/Images/user.jpg"
-                                       Stretch="Fill">
-                                    <Image.Clip>
-                                        <EllipseGeometry Center="15,15"
-                                                         RadiusX="15"
-                                                         RadiusY="15">
+                <!-- MaterialDesign Snackbar 50 全局通知 -->
+                <materialDesign:Snackbar  Grid.Row="0"
+                                          x:Name="Snackbar"
+                                          Panel.ZIndex="1"
+                                          MessageQueue="{materialDesign:MessageQueue}">
 
-                                        </EllipseGeometry>
-                                    </Image.Clip>
-                                </Image>
-                                <Button Content="{materialDesign:PackIcon Kind=Minimize}"
-                                        x:Name="btnMin"
-                                        Style="{StaticResource MaterialDesignFlatMidBgButton }" />
-                                <Button Content="{materialDesign:PackIcon Kind=Maximize}"
-                                        x:Name="btnMax"
-                                        Style="{StaticResource MaterialDesignFlatMidBgButton}" />
-                                <Button Content="{materialDesign:PackIcon Kind=Close }"
-                                        x:Name="btnClose"
-                                        Style="{StaticResource MaterialDesignFlatMidBgButton}" />
+                </materialDesign:Snackbar>
+                <materialDesign:ColorZone Padding="16"
+                                          materialDesign:ElevationAssist.Elevation="Dp4"
+                                          DockPanel.Dock="Top"
+                                          x:Name="colorZone"
+                                          Mode="PrimaryMid">
+                    <DockPanel LastChildFill="False">
+                        <StackPanel Orientation="Horizontal"
+                                    DockPanel.Dock="Right">
+                            <Image Width="30"
+                                   Height="30"
+                                   Source="/Images/user.jpg"
+                                   Stretch="Fill">
+                                <Image.Clip>
+                                    <EllipseGeometry Center="15,15"
+                                                     RadiusX="15"
+                                                     RadiusY="15">
 
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <ToggleButton x:Name="MenuToggleButton"
-                                              AutomationProperties.Name="HamburgerToggleButton"
-                                              IsChecked="False"
-                                              Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+                                    </EllipseGeometry>
+                                </Image.Clip>
+                            </Image>
+                            <Button Content="{materialDesign:PackIcon Kind=Minimize}"
+                                    x:Name="btnMin"
+                                    Style="{StaticResource MaterialDesignFlatMidBgButton }" />
+                            <Button Content="{materialDesign:PackIcon Kind=Maximize}"
+                                    x:Name="btnMax"
+                                    Style="{StaticResource MaterialDesignFlatMidBgButton}" />
+                            <Button Content="{materialDesign:PackIcon Kind=Close }"
+                                    x:Name="btnClose"
+                                    Style="{StaticResource MaterialDesignFlatMidBgButton}" />
 
-                                <Button Margin="24,0,0,0"
-                                        materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}"
-                                        Command="{Binding GoBackCommand}"
-                                        Content="{materialDesign:PackIcon Kind=ArrowLeft,
-                                                     Size=24}"
-                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
-                                        Style="{StaticResource MaterialDesignToolButton}"
-                                        ToolTip="Previous Item" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <ToggleButton x:Name="MenuToggleButton"
+                                          AutomationProperties.Name="HamburgerToggleButton"
+                                          IsChecked="False"
+                                          Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
 
-                                <Button Margin="16,0,0,0"
-                                        materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}"
-                                        Content="{materialDesign:PackIcon Kind=ArrowRight,
-                                                     Size=24}"
-                                        Command="{Binding GoForwardCommand}"
-                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
-                                        Style="{StaticResource MaterialDesignToolButton}"
-                                        ToolTip="Next Item" />
+                            <Button Margin="24,0,0,0"
+                                    materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}"
+                                    Command="{Binding GoBackCommand}"
+                                    Content="{materialDesign:PackIcon Kind=ArrowLeft,
+                                 Size=24}"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
+                                    Style="{StaticResource MaterialDesignToolButton}"
+                                    ToolTip="Previous Item" />
 
-                                <TextBlock Margin="16,0"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           AutomationProperties.Name="Material Design In XAML Toolkit"
-                                           FontSize="22"
-                                           Text="笔记本" />
-                            </StackPanel>
+                            <Button Margin="16,0,0,0"
+                                    materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}"
+                                    Content="{materialDesign:PackIcon Kind=ArrowRight,
+                                 Size=24}"
+                                    Command="{Binding GoForwardCommand}"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
+                                    Style="{StaticResource MaterialDesignToolButton}"
+                                    ToolTip="Next Item" />
 
-                        </DockPanel>
-                    </materialDesign:ColorZone>
-                    <!--主要内容区域, 根据导航栏变更-->
-                    <ContentControl prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
-                </DockPanel>
+                            <TextBlock Margin="16,0"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       AutomationProperties.Name="Material Design In XAML Toolkit"
+                                       FontSize="22"
+                                       Text="笔记本" />
+                        </StackPanel>
+
+                    </DockPanel>
+                </materialDesign:ColorZone>
+                <!--主要内容区域, 根据导航栏变更-->
+                <ContentControl Grid.Row="1"
+                                prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
             </Grid>
         </materialDesign:DrawerHost>
     </materialDesign:DialogHost>

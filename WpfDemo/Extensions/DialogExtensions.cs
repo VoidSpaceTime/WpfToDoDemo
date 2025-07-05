@@ -41,5 +41,23 @@ namespace WpfDemo.Extensions
         {
             eventAggregator.GetEvent<UpdateLoadingEvent>().Subscribe(updateModel);
         }
+        /// <summary>
+        /// 注册提示消息事件
+        /// </summary>
+        /// <param name="eventAggregator"></param>
+        /// <param name="updateModel"></param>
+        public static void ResigiterMessage (this IEventAggregator eventAggregator, Action<string> updateModel)
+        {
+            eventAggregator.GetEvent<MessageEvent>().Subscribe(updateModel);
+        }
+        /// <summary>
+        /// 发送消息
+        /// </summary>
+        /// <param name="eventAggregator"></param>
+        /// <param name="message"></param>
+        public static void SendMessage(this IEventAggregator eventAggregator, string message)
+        {
+            eventAggregator.GetEvent<MessageEvent>().Publish(message);
+        }
     }
 }

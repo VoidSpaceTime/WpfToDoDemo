@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using MaterialDesignThemes.Wpf;
 using Prism.Events;
 using WpfDemo.Common;
 using WpfDemo.Extensions; // Ensure Prism.Events namespace is included  
@@ -11,10 +12,16 @@ namespace WpfDemo.Views
     /// </summary>  
     public partial class MainView : Window
     {
+        private readonly IEventAggregator eventAggregator;
         private readonly IDialogHostService dialogHostService;
         public MainView(IEventAggregator eventAggregator, IDialogHostService dialogHostService)
         {
             InitializeComponent();
+            // 注册全局消息通知 提示消息
+            eventAggregator.ResigiterMessage(arg =>
+            {
+                Snackbar.MessageQueue!.Enqueue(arg);
+            });
 
             // 使用扩展方法注册等待消息窗口
             eventAggregator.Register(arg =>
@@ -29,6 +36,7 @@ namespace WpfDemo.Views
             {
                 drawerHost.IsLeftDrawerOpen = false; // 选择菜单后关闭抽屉  
             };
+            this.eventAggregator = eventAggregator;
             this.dialogHostService = dialogHostService;
 
             btnMin.Click += (s, e) => { this.WindowState = WindowState.Minimized; };

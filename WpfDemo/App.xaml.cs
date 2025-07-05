@@ -44,6 +44,7 @@ namespace WpfDemo
             containerRegistry.RegisterForNavigation<ToDoView, ToDoViewModel>();
             containerRegistry.RegisterForNavigation<MemoView, MemoViewModel>();
             containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>();
+            containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
 
             /*
                 1.	containerRegistry.GetContainer()
