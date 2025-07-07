@@ -16,9 +16,9 @@ namespace MyToDo.Api.Service
             this.dbContext = dbContext;
             this.mapper = mapper;
         }
-        public async Task<ApiResponse> LoginAsync(string account, string password)
+        public async Task<ApiResponse> LoginAsync(UserDto userDto)
         {
-            var result = await dbContext.User.FirstOrDefaultAsync(e => e.UserName.Equals(account) && e.Password.Equals(password));
+            var result = await dbContext.User.FirstOrDefaultAsync(e => e.UserName.Equals(userDto.Account) && e.Password.Equals(userDto.Password));
             if (result == null)
             {
                 return new ApiResponse(false, "Invalid account or password.");

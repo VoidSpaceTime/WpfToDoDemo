@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyToDo.Api.Service;
+using MyToDo.Shared.Dtos;
+using MyToDo.Shared.Extensions;
 
 namespace MyToDo.Api.Controllers
 {
@@ -13,14 +15,16 @@ namespace MyToDo.Api.Controllers
             this.loginService = loginService;
         }
 
-        [HttpGet]
-        public async Task<ApiResponse> Login(string account, string password)
+        [HttpPost]
+        public async Task<ApiResponse> Login([FromBody] UserDto userDto)
         {
-            return await loginService.LoginAsync(account, password);
+            userDto.Password = userDto.Password.GetMD5();
+            return await loginService.LoginAsync(userDto);
         }
         [HttpPost]
-        public async Task<ApiResponse> Register([FromBody] Shared.Dtos.UserDto userDto)
+        public async Task<ApiResponse> Register([FromBody] UserDto userDto)
         {
+            userDto.Password = userDto.Password.GetMD5();
             return await loginService.RegisterAsync(userDto);
         }
     }
