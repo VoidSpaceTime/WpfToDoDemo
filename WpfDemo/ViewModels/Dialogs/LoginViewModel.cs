@@ -4,14 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WpfDemo.Common;
+using WpfDemo.Sercive;
 
 namespace WpfDemo.ViewModels.Dialogs
 {
     public class LoginViewModel : BindableBase, IDialogAware
     {
-        public LoginViewModel()
+        private readonly ILoginService loginService;
+        public LoginViewModel(ILoginService loginService)
         {
             ExecuteCommand = new DelegateCommand<string>(Execute);
+            this.loginService = loginService;
         }
         public string Title => "ToDo";
         public DialogCloseListener RequestClose { get; }
@@ -22,6 +25,7 @@ namespace WpfDemo.ViewModels.Dialogs
 
         public void OnDialogClosed()
         {
+            LoginOut();
         }
 
         public void OnDialogOpened(IDialogParameters parameters)
@@ -59,13 +63,35 @@ namespace WpfDemo.ViewModels.Dialogs
                     throw new ArgumentException("Invalid command parameter", nameof(parameter));
             }
         }
-        void Login()
+        async Task Login()
         {
-            // Simulate a login operation
+            if (string.IsNullOrEmpty(Account) || string.IsNullOrEmpty(Password))
+            {
+                // Show error message for empty fields
+                return;
+            }
+            await loginService.LoginAsync(new MyToDo.Shared.Dtos.UserDto()
+            {
+                Account = Account,
+                Password = Password
+            }).ContinueWith(task =>
+            {
+                if (task.IsCompletedSuccessfully)
+                {
+                    // Handle successful login
+                    RequestClose.Invoke(new DialogResult(ButtonResult.OK));
+                }
+                else
+                {
+                    // Handle login failure
+                    RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
+                }
+            });
         }
         void LoginOut()
         {
-            // Simulate a login operation
+            RequestClose.Invoke(new DialogResult(ButtonResult.No));
+
         }
     }
 

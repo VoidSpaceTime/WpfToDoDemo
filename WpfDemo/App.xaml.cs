@@ -80,6 +80,7 @@ namespace WpfDemo
             containerRegistry.Register<IMemoService, MemoService>();
 
             containerRegistry.Register<IDialogHostService, DialogHostService>();
+            containerRegistry.Register<ILoginService, LoginService>();
 
             containerRegistry.RegisterForNavigation<AddToDoView, AddToDoViewModel>();
             containerRegistry.RegisterForNavigation<AddMemoView, AddMemoViewModel>();
