@@ -27,21 +27,20 @@ namespace WpfDemo
             {
                 if (callback.Result != ButtonResult.OK)
                 {
-                    // 如果登录失败，则关闭应用程序
+                    // 如果登录失败，则关闭应用程序 
                     Application.Current.Shutdown();
                     return;
                 }
-                else
+
+                // 例如，显示主窗口或执行其他初始化逻辑
+                var service = App.Current.MainWindow.DataContext as IConfigurationService;
+                if (service != null)
                 {
-                    // 例如，显示主窗口或执行其他初始化逻辑
-                    var service = App.Current.MainWindow.DataContext as IConfigurationService;
-                    if (service != null)
-                    {
-                        service.Configure();
-                    }
-                    base.OnInitialized();
+                    service.Configure();
                 }
-            }); 
+                base.OnInitialized();
+
+            });
         }
         /// <summary>
         /// 注册依赖注入容器中的类型和服务。

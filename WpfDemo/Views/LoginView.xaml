@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WpfDemo.Views"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
-            xmlns:pass="clr-namespace:WpfDemo.Extensions"
+             xmlns:pass="clr-namespace:WpfDemo.Extensions"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              Width="600"
@@ -37,41 +37,103 @@
                Margin="50">
 
         </Image>
-        <DockPanel Grid.Column="1"
-                   VerticalAlignment="Center"
-                   Margin="15">
-            <TextBlock Text="欢迎使用"
-                       FontSize="22"
-                       FontWeight="Bold"
-                       DockPanel.Dock="Top"
-                       Margin="0,10" />
-            <TextBox md:HintAssist.Hint="请输入用户名"
-                     DockPanel.Dock="Top"
-                     Text="{Binding Account}"
-                     Margin="0,10" />
-            <TextBox md:HintAssist.Hint="请输入密码"
-                     DockPanel.Dock="Top"
-                     pass:PasswordExtensions.Password="{Binding Password}"
-                     md:PasswordBoxAssist.IsPasswordRevealed="True"
-                     Margin="0,10">
-                <i:Interaction.Behaviors>
-                    <pass:PasswordBehavior />
-                </i:Interaction.Behaviors>
-            </TextBox>
-            <Button Content="登录"
-                    Command="{Binding ExecuteCommand}"
-                    CommandParameter="Login"
-                    DockPanel.Dock="Top"></Button>
-            <DockPanel LastChildFill="False"
-                       Margin="0,10">
-                <TextBlock Text="忘记密码？"
-                           FontSize="14"
-                           Margin="0,10" />
-                <TextBlock Text="注册账号"
-                           FontSize="14"
-                           DockPanel.Dock="Right"
-                           Margin="0,10" />
-            </DockPanel>
-        </DockPanel>
+        <md:Transitioner Grid.Column="1"
+                         SelectedIndex="{Binding SelectIndex}">
+            <md:TransitionerSlide>
+                <DockPanel VerticalAlignment="Center"
+                           Margin="15">
+                    <TextBlock Text="欢迎使用"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               DockPanel.Dock="Top"
+                               Margin="0,10" />
+                    <TextBox md:HintAssist.Hint="请输入用户名"
+                             DockPanel.Dock="Top"
+                             Text="{Binding Account}"
+                             Margin="0,10" />
+                    <PasswordBox md:HintAssist.Hint="请输入密码"
+                                 DockPanel.Dock="Top"
+                                 pass:PasswordExtensions.Password="{Binding Password,Mode=TwoWay , UpdateSourceTrigger=PropertyChanged}"
+                                 md:PasswordBoxAssist.IsPasswordRevealed="True"
+                                 Margin="0,10">
+                        <i:Interaction.Behaviors>
+                            <pass:PasswordBehavior />
+                        </i:Interaction.Behaviors>
+                    </PasswordBox>
+                    <Button Content="登录"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="Login"
+                            DockPanel.Dock="Top"></Button>
+                    <DockPanel LastChildFill="False"
+                               Margin="0,10">
+                        <TextBlock Text="忘记密码？"
+                                   FontSize="14"
+                                   Margin="0,10" />
+                        <TextBlock Text="注册账号"
+                                   FontSize="14"
+                                   DockPanel.Dock="Right"
+                                   Margin="0,10">
+                            <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding ExecuteCommand}"
+                                                               CommandParameter="ToRegister">
+                                            
+                                        </i:InvokeCommandAction>
+                                    </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBlock>
+                    </DockPanel>
+                </DockPanel>
+
+            </md:TransitionerSlide>
+            <md:TransitionerSlide>
+                <DockPanel VerticalAlignment="Center"
+                           Margin="15">
+                    <TextBlock Text="注册新用户"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               DockPanel.Dock="Top"
+                               Margin="0,10" />
+                    <TextBox Text="{Binding RegisterUser.Account}"
+                             md:HintAssist.Hint="请输入账号"
+                             FontSize="14"
+                             DockPanel.Dock="Top"
+                             Margin="0,10" />
+                    <TextBox Text="{Binding RegisterUser.UserName}"
+                             md:HintAssist.Hint="请输入用户名"
+                             FontSize="14"
+                             DockPanel.Dock="Top"
+                             Margin="0,10" />
+                    <PasswordBox md:HintAssist.Hint="请输入密码"
+                                 DockPanel.Dock="Top"
+                                 pass:PasswordExtensions.Password="{Binding RegisterUser.Password ,Mode=TwoWay , UpdateSourceTrigger=PropertyChanged}"
+                                 md:PasswordBoxAssist.IsPasswordRevealed="True"
+                                 Margin="0,10">
+                        <i:Interaction.Behaviors>
+                            <pass:PasswordBehavior />
+                        </i:Interaction.Behaviors>
+                    </PasswordBox>
+                    <PasswordBox md:HintAssist.Hint="请再次密码"
+                                 DockPanel.Dock="Top"
+                                 pass:PasswordExtensions.Password="{Binding RegisterUser.NewPassword ,Mode=TwoWay , UpdateSourceTrigger=PropertyChanged}"
+                                 md:PasswordBoxAssist.IsPasswordRevealed="True"
+                                 Margin="0,10">
+                        <i:Interaction.Behaviors>
+                            <pass:PasswordBehavior />
+                        </i:Interaction.Behaviors>
+                    </PasswordBox>
+                    <Button Content="注册"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="Register"
+                            Margin="0,5"
+                            DockPanel.Dock="Top"></Button>
+                    <Button Content="返回登录"
+                            DockPanel.Dock="Top"
+                            Margin="0,5">
+
+                    </Button>
+                </DockPanel>
+            </md:TransitionerSlide>
+        </md:Transitioner>
     </Grid>
 </UserControl>

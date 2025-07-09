@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyToDo.Shared.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +12,14 @@ namespace WpfDemo.ViewModels.Dialogs
     public class LoginViewModel : BindableBase, IDialogAware
     {
         private readonly ILoginService loginService;
+        private bool isManualClose = false;
+
         public LoginViewModel(ILoginService loginService)
         {
             ExecuteCommand = new DelegateCommand<string>(Execute);
             this.loginService = loginService;
+            SelectIndex = 0;
+            RegisterUser = new RegisterUserDto();
         }
         public string Title => "ToDo";
         public DialogCloseListener RequestClose { get; }
@@ -25,7 +30,11 @@ namespace WpfDemo.ViewModels.Dialogs
 
         public void OnDialogClosed()
         {
-            LoginOut();
+            if (!isManualClose)
+            {
+                LoginOut();
+            }
+            isManualClose = false; // 重置标志位
         }
 
         public void OnDialogOpened(IDialogParameters parameters)
@@ -46,6 +55,20 @@ namespace WpfDemo.ViewModels.Dialogs
             get { return password; }
             set { password = value; RaisePropertyChanged(); }
         }
+        private int selectIndex;
+
+        public int SelectIndex
+        {
+            get { return selectIndex; }
+            set { selectIndex = value; RaisePropertyChanged(); }
+        }
+        private RegisterUserDto registerUser;
+
+        public RegisterUserDto RegisterUser
+        {
+            get { return registerUser; }
+            set { registerUser = value; RaisePropertyChanged(); }
+        }
 
         private void Execute(string parameter)
         {
@@ -59,6 +82,15 @@ namespace WpfDemo.ViewModels.Dialogs
                     break;
                 case "Cancel":
                     break;
+                case "ToRegister":
+                    SelectIndex = 1;
+                    break;
+                case "ToLogin":
+                    SelectIndex = 0;
+                    break;
+                case "Register":
+                    Register();
+                    break;
                 default:
                     throw new ArgumentException("Invalid command parameter", nameof(parameter));
             }
@@ -70,28 +102,52 @@ namespace WpfDemo.ViewModels.Dialogs
                 // Show error message for empty fields
                 return;
             }
-            await loginService.LoginAsync(new MyToDo.Shared.Dtos.UserDto()
+            var res = await loginService.LoginAsync(new MyToDo.Shared.Dtos.UserDto()
             {
                 Account = Account,
                 Password = Password
-            }).ContinueWith(task =>
-            {
-                if (task.IsCompletedSuccessfully)
-                {
-                    // Handle successful login
-                    RequestClose.Invoke(new DialogResult(ButtonResult.OK));
-                }
-                else
-                {
-                    // Handle login failure
-                    RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
-                }
             });
+            if (res != null && res.Status)
+            {
+                isManualClose = true;
+                RequestClose.Invoke(new DialogResult(ButtonResult.OK));
+            }
+            else
+            {
+                isManualClose = true;
+                RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
+            }
         }
         void LoginOut()
         {
+            isManualClose = true;
             RequestClose.Invoke(new DialogResult(ButtonResult.No));
+        }
+        async Task Register()
+        {
+            if (registerUser.Password.Equals(registerUser.NewPassword) && !string.IsNullOrWhiteSpace(registerUser.UserName) && !string.IsNullOrWhiteSpace(registerUser.Password) && !string.IsNullOrWhiteSpace(registerUser.Account))
+            {
+                await loginService.RegisterAsync(new UserDto()
+                {
+                    Account = registerUser.Account,
+                    Password = registerUser.Password,
+                    UserName = registerUser.UserName
 
+                }).ContinueWith(e =>
+                {
+                    if (e.IsCompletedSuccessfully)
+                    {
+                        // Handle successful registration
+                        SelectIndex = 0; // Switch back to login view
+                    }
+                    else
+                    {
+                        // Handle registration failure
+                        // Show error message or handle accordingly
+                    }
+                });
+            }
+            return;
         }
     }
 
