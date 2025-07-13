@@ -1,10 +1,5 @@
 ﻿using MyToDo.Shared.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WpfDemo.Common;
+using WpfDemo.Extensions;
 using WpfDemo.Sercive;
 
 namespace WpfDemo.ViewModels.Dialogs
@@ -13,13 +8,15 @@ namespace WpfDemo.ViewModels.Dialogs
     {
         private readonly ILoginService loginService;
         private bool isManualClose = false;
+        private readonly IEventAggregator eventAggregator;
 
-        public LoginViewModel(ILoginService loginService)
+        public LoginViewModel(ILoginService loginService, IEventAggregator eventAggregator)
         {
             ExecuteCommand = new DelegateCommand<string>(Execute);
             this.loginService = loginService;
             SelectIndex = 0;
             RegisterUser = new RegisterUserDto();
+            this.eventAggregator = eventAggregator;
         }
         public string Title => "ToDo";
         public DialogCloseListener RequestClose { get; }
@@ -102,7 +99,7 @@ namespace WpfDemo.ViewModels.Dialogs
                 // Show error message for empty fields
                 return;
             }
-            var res = await loginService.LoginAsync(new MyToDo.Shared.Dtos.UserDto()
+            var res = await loginService.LoginAsync(new UserDto()
             {
                 Account = Account,
                 Password = Password
@@ -111,11 +108,15 @@ namespace WpfDemo.ViewModels.Dialogs
             {
                 isManualClose = true;
                 RequestClose.Invoke(new DialogResult(ButtonResult.OK));
+                return;
             }
             else
             {
                 isManualClose = true;
-                RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
+                //RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
+                //eventAggregator.SendMessage("用户名或密码错误!");
+                eventAggregator.SendMessage(res.Message, "Login");
+                return;
             }
         }
         void LoginOut()
@@ -139,13 +140,21 @@ namespace WpfDemo.ViewModels.Dialogs
                     {
                         // Handle successful registration
                         SelectIndex = 0; // Switch back to login view
+                        eventAggregator.SendMessage($"注册成功", "Login");
+                        return;
                     }
                     else
                     {
                         // Handle registration failure
                         // Show error message or handle accordingly
+                        eventAggregator.SendMessage($"{e.Result.Message},注册失败，请稍后再试！", "Login");
+                        return;
                     }
                 });
+            }
+            else
+            {
+                eventAggregator.SendMessage("注册失败，请检查输入信息是否完整！", "Login");
             }
             return;
         }

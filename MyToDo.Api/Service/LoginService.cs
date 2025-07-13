@@ -21,7 +21,7 @@ namespace MyToDo.Api.Service
             var result = await dbContext.User.FirstOrDefaultAsync(e => e.UserName.Equals(userDto.Account) && e.Password.Equals(userDto.Password));
             if (result == null)
             {
-                return new ApiResponse(false, "Invalid account or password.");
+                return new ApiResponse("Invalid account or password.");
             }
             else
             {

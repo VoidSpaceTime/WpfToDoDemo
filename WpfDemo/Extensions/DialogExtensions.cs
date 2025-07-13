@@ -46,18 +46,25 @@ namespace WpfDemo.Extensions
         /// </summary>
         /// <param name="eventAggregator"></param>
         /// <param name="updateModel"></param>
-        public static void ResigiterMessage (this IEventAggregator eventAggregator, Action<string> updateModel)
+        public static void ResigiterMessage(this IEventAggregator eventAggregator, Action<MessgaeModel> updateModel, string filterName = "Main")
         {
-            eventAggregator.GetEvent<MessageEvent>().Subscribe(updateModel);
+            eventAggregator.GetEvent<MessageEvent>().Subscribe(updateModel, ThreadOption.PublisherThread, true, (f) =>
+            {
+                return f.Filter.Equals(filterName);
+            });
         }
         /// <summary>
         /// 发送消息
         /// </summary>
         /// <param name="eventAggregator"></param>
         /// <param name="message"></param>
-        public static void SendMessage(this IEventAggregator eventAggregator, string message)
+        public static void SendMessage(this IEventAggregator eventAggregator, string message, string filterName = "Main")
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(message);
+            eventAggregator.GetEvent<MessageEvent>().Publish(new MessgaeModel()
+            {
+                Message = message,
+                Filter = filterName
+            });
         }
     }
 }

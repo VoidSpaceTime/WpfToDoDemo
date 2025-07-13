@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace WpfDemo.Common.Events
 {
-    public class MessageEvent :PubSubEvent<string>
+    public class MessgaeModel
+    {
+        public string Message { get; set; }
+        public string Filter { get; set; }
+    }
+    public class MessageEvent : PubSubEvent<MessgaeModel>
     {
 
     }

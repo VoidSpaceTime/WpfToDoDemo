@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfDemo.Extensions;
 
 namespace WpfDemo.Views
 {
@@ -20,9 +21,18 @@ namespace WpfDemo.Views
     /// </summary>
     public partial class LoginView : UserControl
     {
-        public LoginView()
+        private readonly IEventAggregator eventAggregator;
+        public LoginView(IEventAggregator eventAggregator)
         {
             InitializeComponent();
+            this.eventAggregator = eventAggregator;
+            eventAggregator.ResigiterMessage(arg =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    LoginSnackBar.MessageQueue?.Enqueue(arg.Message);
+                });
+            }, "Login");
         }
     }
 }

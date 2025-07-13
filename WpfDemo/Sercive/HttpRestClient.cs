@@ -20,14 +20,14 @@ namespace WpfDemo.Sercive
             request.AddHeader("Content-Type", baseRequest.ContentType);
             if (baseRequest.Parameters != null)
             {
-                //if (baseRequest.Metod == Method.Get)
-                //{
-                request.AddParameter("param", JsonConvert.SerializeObject(baseRequest.Parameters));
-                //}
-                //else
-                //{
-                //    request.AddJsonBody(baseRequest.Parameters);
-                //}
+                if (baseRequest.Metod == Method.Get)
+                {
+                    request.AddParameter("param", JsonConvert.SerializeObject(baseRequest.Parameters));
+                }
+                else
+                {
+                    request.AddJsonBody(baseRequest.Parameters); // 只保留这句
+                }
             }
             //request.Resource = (baseUrl + baseRequest.Route);
             //var response = await restClient.ExecuteAsync<ApiResponse>(request);

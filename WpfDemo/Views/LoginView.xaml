@@ -37,6 +37,12 @@
                Margin="50">
 
         </Image>
+        <md:Snackbar x:Name="LoginSnackBar"
+                     Panel.ZIndex="1"
+                     MessageQueue="{md:MessageQueue}"
+                     Grid.ColumnSpan="2">
+
+        </md:Snackbar>
         <md:Transitioner Grid.Column="1"
                          SelectedIndex="{Binding SelectIndex}">
             <md:TransitionerSlide>

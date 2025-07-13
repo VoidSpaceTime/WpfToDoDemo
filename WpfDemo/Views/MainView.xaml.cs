@@ -20,7 +20,7 @@ namespace WpfDemo.Views
             // 注册全局消息通知 提示消息
             eventAggregator.ResigiterMessage(arg =>
             {
-                Snackbar.MessageQueue!.Enqueue(arg);
+                Snackbar.MessageQueue!.Enqueue(arg.Message);
             });
 
             // 使用扩展方法注册等待消息窗口

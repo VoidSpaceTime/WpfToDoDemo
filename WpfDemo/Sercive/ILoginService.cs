@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace WpfDemo.Sercive
 {
- public   interface ILoginService
+    public interface ILoginService
     {
         Task<ApiResponse> LoginAsync(UserDto userDto);
         Task<ApiResponse> RegisterAsync(UserDto userDto);

@@ -17,6 +17,7 @@ namespace WpfDemo.Sercive
             {
                 Metod = RestSharp.Method.Post,
                 Route = $"api/{serviceName}/Login",
+                ContentType = "application/json",
                 Parameters = userDto
             };
             return await restClient.ExcuteAsync(baseRequest);
@@ -28,6 +29,8 @@ namespace WpfDemo.Sercive
             {
                 Metod = RestSharp.Method.Post,
                 Route = $"api/{serviceName}/Register",
+                // 明确指定ContentType为application/json，确保后端能正确解析
+                ContentType = "application/json",
                 Parameters = userDto
             };
             return await restClient.ExcuteAsync(baseRequest);
