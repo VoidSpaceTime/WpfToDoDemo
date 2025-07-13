@@ -61,7 +61,7 @@
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="SelectionChanged">
                                 <b:InvokeCommandAction Command="{Binding NavigateCommond}"
-                                                       CommandParameter="{Binding ElementName=menuBar, Path=SelectedItem}" />
+                                                       CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListBox}}" />
                             </b:EventTrigger>
                         </b:Interaction.Triggers>
                         <ListBox.ItemTemplate>
