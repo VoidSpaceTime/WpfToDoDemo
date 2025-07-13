@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using WpfDemo.Common;
+using WpfDemo.Extensions;
 using WpfDemo.Sercive;
 using WpfDemo.ViewModels;
 using WpfDemo.ViewModels.Dialogs;
@@ -89,7 +90,25 @@ namespace WpfDemo
             containerRegistry.RegisterDialog<LoginView, LoginViewModel>();
 
         }
+        public static void LoginOut(IContainerProvider container)
+        {
+            Current.MainWindow.Hide();
+            // 退出登录
+            AppSession.UserName = string.Empty;
 
+            // 将 Container 替换为 this.Container 以解决 CS0120 错误
+            var dialog = container.Resolve<IDialogService>();
+            dialog.ShowDialog("LoginView", callback =>
+            {
+                if (callback.Result != ButtonResult.OK)
+                {
+                    // 如果登录失败，则关闭应用程序 
+                    //Application.Current.Shutdown();
+                    Environment.Exit(0);
+                    return;
+                }
+                Current.MainWindow.Show();
+            });
+        }
     }
-
 }

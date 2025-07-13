@@ -11,7 +11,7 @@ namespace WpfDemo.Sercive
         {
             this.restClient = restClient;
         }
-        public async Task<ApiResponse> LoginAsync(UserDto userDto)
+        public async Task<ApiResponse<UserDto>> LoginAsync(UserDto userDto)
         {
             BaseRequest baseRequest = new BaseRequest
             {
@@ -20,7 +20,7 @@ namespace WpfDemo.Sercive
                 ContentType = "application/json",
                 Parameters = userDto
             };
-            return await restClient.ExcuteAsync(baseRequest);
+            return await restClient.ExcuteAsync<UserDto>(baseRequest);
         }
 
         public async Task<ApiResponse> RegisterAsync(UserDto userDto)

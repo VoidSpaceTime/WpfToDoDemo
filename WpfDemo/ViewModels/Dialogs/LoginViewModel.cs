@@ -1,4 +1,5 @@
 ﻿using MyToDo.Shared.Dtos;
+using WpfDemo.Common;
 using WpfDemo.Extensions;
 using WpfDemo.Sercive;
 
@@ -106,6 +107,7 @@ namespace WpfDemo.ViewModels.Dialogs
             });
             if (res != null && res.Status)
             {
+                AppSession.UserName = res.Data.UserName;
                 isManualClose = true;
                 RequestClose.Invoke(new DialogResult(ButtonResult.OK));
                 return;

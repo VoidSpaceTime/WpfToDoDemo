@@ -7,11 +7,12 @@ namespace WpfDemo.ViewModels
 {
     public class MainViewModel : BindableBase, IConfigurationService
     {
-        public MainViewModel(IRegionManager regionManager)
+        public MainViewModel(IRegionManager regionManager ,IContainerProvider containerProvider)
         {
             MenuBars = new ObservableCollection<MenuBar>();
             NavigateCommond = new DelegateCommand<MenuBar>(Navigate);
             this.regionManager = regionManager;
+            this.containerProvider = containerProvider;
             GoBackCommand = new DelegateCommand(() =>
             {
                 if (regionNavigationJournal != null && regionNavigationJournal.CanGoBack)
@@ -25,6 +26,12 @@ namespace WpfDemo.ViewModels
                 {
                     regionNavigationJournal.GoForward();
                 }
+            });
+            LoginOutCommand= new DelegateCommand(() =>
+            {
+                // 退出登录
+                AppSession.UserName = string.Empty;
+                App.LoginOut(containerProvider);
             });
         }
         /// <summary>
@@ -53,15 +60,25 @@ namespace WpfDemo.ViewModels
         public DelegateCommand<MenuBar> NavigateCommond { get; private set; }
         public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand GoForwardCommand { get; private set; }
+        public DelegateCommand LoginOutCommand { get; private set; }
 
         private ObservableCollection<MenuBar> menuBars;
         private readonly IRegionManager regionManager;
+        private readonly IContainerProvider containerProvider;
         private IRegionNavigationJournal regionNavigationJournal;
 
         public ObservableCollection<MenuBar> MenuBars
         {
             get { return menuBars; }
             set { menuBars = value; RaisePropertyChanged(); }
+        }
+
+        private string userName;
+
+        public string UserName
+        {
+            get { return userName; }
+            set { userName = value; RaisePropertyChanged(); }
         }
 
         void CreateMenuBar()
@@ -98,6 +115,8 @@ namespace WpfDemo.ViewModels
         {
             CreateMenuBar();
             regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("IndexView");
+            UserName = AppSession.UserName;
+
         }
     }
 }

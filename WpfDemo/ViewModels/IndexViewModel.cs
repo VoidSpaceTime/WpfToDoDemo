@@ -29,7 +29,7 @@ namespace WpfDemo.ViewModels
             this.regionManager = containerProvider.Resolve<IRegionManager>();
             ExecuteCommand = new DelegateCommand<string>(Execute);
             TaskBars = new ObservableCollection<TaskBar>();
-            Title = $"你好 现在是{DateTime.Now:yyyy年MM月dd日 dddd}";
+            Title = $"你好!{AppSession.UserName},现在是{DateTime.Now:yyyy年MM月dd日 dddd}";
             CreateTaskBars();
             DialogService = dialogService;
             EditToDoCommand = new DelegateCommand<ToDoDto>(AddToDo);
